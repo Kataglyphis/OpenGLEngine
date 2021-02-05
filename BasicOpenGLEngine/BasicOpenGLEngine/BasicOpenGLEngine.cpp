@@ -4,16 +4,25 @@
 #include <iostream>
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 
 
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 // Window Dims
 const GLint WIDTH = 800, HEIGHT = 600;
 
-GLuint VAO, VBO, shader;
+GLuint VAO, VBO, shader, uniform_model;
+
+bool direction = true;
+float tri_offst = 0.0f;
+float tri_max_offset = 0.7f;
+float tri_increment = 0.0005f;
 
 //Vertex Shader 
 static const char* vertex_shader = 
@@ -21,9 +30,11 @@ static const char* vertex_shader =
                                                                     \n\
          layout (location = 0) in vec3 pos; \n\
                                                                     \n\
+        uniform mat4 model;                    \n\
+                                                                    \n\
         void main() {                                       \n\
                                                                     \n\
-            gl_Position = vec4(pos, 1.0);     \n\
+            gl_Position = model * vec4(pos.x, pos.y, pos.z , 1.0);     \n\
         }                                                          \n\
         ";
 
@@ -126,6 +137,8 @@ void compile_shaders() {
         return;
     }
 
+    uniform_model = glGetUniformLocation(shader, "model");
+
 }
 
 int main()
@@ -187,11 +200,26 @@ int main()
         // get and handle user input events
         glfwPollEvents();
 
+        if (direction) {
+            tri_offst += tri_increment;
+        } else {
+            tri_offst -= tri_increment;
+        }
+
+        if (abs(tri_offst) >= tri_max_offset) {
+            direction = !direction;
+        }
+
         // clear window
         glClearColor(0.f, 0.f, 0.f, 1.f);
         glClear(GL_COLOR_BUFFER_BIT);
 
         glUseProgram(shader);
+        
+        glm::mat4 model(1.0f);
+        model = glm::translate(model, glm::vec3(tri_offst, 0.0f, 0.0f));
+
+        glUniformMatrix4fv(uniform_model, 1, GL_FALSE, glm::value_ptr(model));
 
         glBindVertexArray(VAO);
 

@@ -16,13 +16,20 @@
 
 // Window Dims
 const GLint WIDTH = 800, HEIGHT = 600;
-
+const float to_radians = 3.14159265f / 180.f;
 GLuint VAO, VBO, shader, uniform_model;
 
 bool direction = true;
 float tri_offst = 0.0f;
 float tri_max_offset = 0.7f;
-float tri_increment = 0.0005f;
+float tri_increment = 0.005f;
+
+float current_angle = 0.0f;
+
+bool size_dir = true;
+float cur_size = 0.4f;
+float max_size = 0.8f;
+float min_size = 0.1f;
 
 //Vertex Shader 
 static const char* vertex_shader = 
@@ -34,7 +41,7 @@ static const char* vertex_shader =
                                                                     \n\
         void main() {                                       \n\
                                                                     \n\
-            gl_Position = model * vec4(pos.x, pos.y, pos.z , 1.0);     \n\
+            gl_Position = model * vec4(pos , 1.0);     \n\
         }                                                          \n\
         ";
 
@@ -210,6 +217,21 @@ int main()
             direction = !direction;
         }
 
+        current_angle += 0.1f;
+        if (current_angle >= 360) {
+            current_angle -= 360;
+        }
+
+        if (size_dir) {
+            cur_size += 0.001f;
+        } else {
+            cur_size -= 0.001f;
+        }
+
+        if (cur_size >= max_size || cur_size <= min_size) {
+            size_dir = !size_dir;
+        }
+
         // clear window
         glClearColor(0.f, 0.f, 0.f, 1.f);
         glClear(GL_COLOR_BUFFER_BIT);
@@ -217,8 +239,11 @@ int main()
         glUseProgram(shader);
         
         glm::mat4 model(1.0f);
-        model = glm::translate(model, glm::vec3(tri_offst, 0.0f, 0.0f));
 
+        //model = glm::rotate(model, current_angle * to_radians, glm::vec3(0.0f,0.0f,1.0f));
+        model = glm::translate(model, glm::vec3(tri_offst, 0.0f, 0.0f));
+        model = glm::scale(model, glm::vec3(cur_size, cur_size, 1.0f));
+ 
         glUniformMatrix4fv(uniform_model, 1, GL_FALSE, glm::value_ptr(model));
 
         glBindVertexArray(VAO);

@@ -16,7 +16,7 @@
 
 // Window Dims
 const GLint WIDTH = 800, HEIGHT = 600;
-
+const float toRadians = -3.1415926f / 180.f;
 GLuint VAO, VBO, shader, uniform_model;
 
 bool direction = true;
@@ -24,17 +24,27 @@ float tri_offst = 0.0f;
 float tri_max_offset = 0.7f;
 float tri_increment = 0.0005f;
 
+float cur_angle = 0.0f;
+
+bool size_direction = true;
+float current_size = 0.4f;
+float max_size = 0.8f;
+float min_size = 0.1f;
+
 //Vertex Shader 
 static const char* vertex_shader = 
         "#version 330                                   \n\
                                                                     \n\
          layout (location = 0) in vec3 pos; \n\
                                                                     \n\
+        out vec4 v_color;                              \n\
+                                                                    \n\
         uniform mat4 model;                    \n\
                                                                     \n\
         void main() {                                       \n\
                                                                     \n\
             gl_Position = model * vec4(pos.x, pos.y, pos.z , 1.0);     \n\
+            v_color = \n\
         }                                                          \n\
         ";
 
@@ -42,7 +52,9 @@ static const char* vertex_shader =
 static const char* fragment_shader =
         "#version 330                                   \n\
                                                                     \n\
-        out vec4 color; \n\
+        in vec4 v_color;                                \n\
+                                                                    \n\
+        out vec4 color;                                  \n\
                                                                     \n\
         void main() {                                       \n\
                                                                     \n\
@@ -210,6 +222,25 @@ int main()
             direction = !direction;
         }
 
+        cur_angle += 0.001f;
+        
+        if (cur_angle >= 360) {
+            cur_angle -= 360;
+        }
+
+        if (size_direction) {
+            current_size += 0.0001f;
+        }
+        else {
+            current_size -= 0.0001f;
+        }
+
+        if (current_size >= max_size || current_size <= min_size) {
+
+            size_direction = !size_direction;
+
+        }
+
         // clear window
         glClearColor(0.f, 0.f, 0.f, 1.f);
         glClear(GL_COLOR_BUFFER_BIT);
@@ -217,6 +248,9 @@ int main()
         glUseProgram(shader);
         
         glm::mat4 model(1.0f);
+
+        model = glm::rotate(model, cur_angle*toRadians, glm::vec3(0.0f, 0.0f, 1.0f));
+        model = glm::scale(model, glm::vec3(current_size, current_size, 1.0f));
         model = glm::translate(model, glm::vec3(tri_offst, 0.0f, 0.0f));
 
         glUniformMatrix4fv(uniform_model, 1, GL_FALSE, glm::value_ptr(model));
@@ -236,14 +270,3 @@ int main()
 
     return 0;
 }
-
-// Programm ausführen: STRG+F5 oder Menüeintrag "Debuggen" > "Starten ohne Debuggen starten"
-// Programm debuggen: F5 oder "Debuggen" > Menü "Debuggen starten"
-
-// Tipps für den Einstieg: 
-//   1. Verwenden Sie das Projektmappen-Explorer-Fenster zum Hinzufügen/Verwalten von Dateien.
-//   2. Verwenden Sie das Team Explorer-Fenster zum Herstellen einer Verbindung mit der Quellcodeverwaltung.
-//   3. Verwenden Sie das Ausgabefenster, um die Buildausgabe und andere Nachrichten anzuzeigen.
-//   4. Verwenden Sie das Fenster "Fehlerliste", um Fehler anzuzeigen.
-//   5. Wechseln Sie zu "Projekt" > "Neues Element hinzufügen", um neue Codedateien zu erstellen, bzw. zu "Projekt" > "Vorhandenes Element hinzufügen", um dem Projekt vorhandene Codedateien hinzuzufügen.
-//   6. Um dieses Projekt später erneut zu öffnen, wechseln Sie zu "Datei" > "Öffnen" > "Projekt", und wählen Sie die SLN-Datei aus.

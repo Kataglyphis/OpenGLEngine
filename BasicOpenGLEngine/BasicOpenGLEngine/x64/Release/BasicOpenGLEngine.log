@@ -1,16 +1,23 @@
-﻿  MyWindow.cpp
+﻿  BasicOpenGLEngine.cpp
 C:\Users\Jonas Heinle\Desktop\OpenGLEngine\BasicOpenGLEngine\BasicOpenGLEngine\MyWindow.h(16,38): warning C4244: "return": Konvertierung von "GLint" in "GLfloat", möglicher Datenverlust
 C:\Users\Jonas Heinle\Desktop\OpenGLEngine\BasicOpenGLEngine\BasicOpenGLEngine\MyWindow.h(17,39): warning C4244: "return": Konvertierung von "GLint" in "GLfloat", möglicher Datenverlust
-C:\Users\Jonas Heinle\Desktop\OpenGLEngine\BasicOpenGLEngine\BasicOpenGLEngine\MyWindow.cpp(126,30): warning C4244: "=": Konvertierung von "double" in "GLfloat", möglicher Datenverlust
-C:\Users\Jonas Heinle\Desktop\OpenGLEngine\BasicOpenGLEngine\BasicOpenGLEngine\MyWindow.cpp(127,30): warning C4244: "=": Konvertierung von "double" in "GLfloat", möglicher Datenverlust
-C:\Users\Jonas Heinle\Desktop\OpenGLEngine\BasicOpenGLEngine\BasicOpenGLEngine\MyWindow.cpp(131,34): warning C4244: "=": Konvertierung von "double" in "GLfloat", möglicher Datenverlust
-C:\Users\Jonas Heinle\Desktop\OpenGLEngine\BasicOpenGLEngine\BasicOpenGLEngine\MyWindow.cpp(132,47): warning C4244: "=": Konvertierung von "double" in "GLfloat", möglicher Datenverlust
-C:\Users\Jonas Heinle\Desktop\OpenGLEngine\BasicOpenGLEngine\BasicOpenGLEngine\MyWindow.cpp(134,26): warning C4244: "=": Konvertierung von "double" in "GLfloat", möglicher Datenverlust
-C:\Users\Jonas Heinle\Desktop\OpenGLEngine\BasicOpenGLEngine\BasicOpenGLEngine\MyWindow.cpp(135,26): warning C4244: "=": Konvertierung von "double" in "GLfloat", möglicher Datenverlust
+C:\Users\Jonas Heinle\Desktop\OpenGLEngine\BasicOpenGLEngine\BasicOpenGLEngine\BasicOpenGLEngine.cpp(104,21): warning C4244: "Initialisierung": Konvertierung von "double" in "GLfloat", möglicher Datenverlust
+  Camera.cpp
+  Mesh.cpp
+  MyWindow.cpp
+C:\Users\Jonas Heinle\Desktop\OpenGLEngine\BasicOpenGLEngine\BasicOpenGLEngine\MyWindow.h(16,38): warning C4244: "return": Konvertierung von "GLint" in "GLfloat", möglicher Datenverlust
+C:\Users\Jonas Heinle\Desktop\OpenGLEngine\BasicOpenGLEngine\BasicOpenGLEngine\MyWindow.h(17,39): warning C4244: "return": Konvertierung von "GLint" in "GLfloat", möglicher Datenverlust
+C:\Users\Jonas Heinle\Desktop\OpenGLEngine\BasicOpenGLEngine\BasicOpenGLEngine\MyWindow.cpp(132,30): warning C4244: "=": Konvertierung von "double" in "GLfloat", möglicher Datenverlust
+C:\Users\Jonas Heinle\Desktop\OpenGLEngine\BasicOpenGLEngine\BasicOpenGLEngine\MyWindow.cpp(133,30): warning C4244: "=": Konvertierung von "double" in "GLfloat", möglicher Datenverlust
+C:\Users\Jonas Heinle\Desktop\OpenGLEngine\BasicOpenGLEngine\BasicOpenGLEngine\MyWindow.cpp(137,34): warning C4244: "=": Konvertierung von "double" in "GLfloat", möglicher Datenverlust
+C:\Users\Jonas Heinle\Desktop\OpenGLEngine\BasicOpenGLEngine\BasicOpenGLEngine\MyWindow.cpp(138,47): warning C4244: "=": Konvertierung von "double" in "GLfloat", möglicher Datenverlust
+C:\Users\Jonas Heinle\Desktop\OpenGLEngine\BasicOpenGLEngine\BasicOpenGLEngine\MyWindow.cpp(140,26): warning C4244: "=": Konvertierung von "double" in "GLfloat", möglicher Datenverlust
+C:\Users\Jonas Heinle\Desktop\OpenGLEngine\BasicOpenGLEngine\BasicOpenGLEngine\MyWindow.cpp(141,26): warning C4244: "=": Konvertierung von "double" in "GLfloat", möglicher Datenverlust
+  Shader.cpp
+C:\Users\Jonas Heinle\Desktop\OpenGLEngine\BasicOpenGLEngine\BasicOpenGLEngine\Shader.cpp(121,41): warning C4267: "=": Konvertierung von "size_t" nach "GLint", Datenverlust möglich
+  Texture.cpp
   Code wird generiert.
-C:\Users\Jonas Heinle\Desktop\OpenGLEngine\BasicOpenGLEngine\BasicOpenGLEngine\MyWindow.cpp(78): warning C4715: "MyWindow::initialize": Nicht alle Codepfade geben einen Wert zurück.
-  4 of 347 functions ( 1.2%) were compiled, the rest were copied from previous compilation.
-    0 functions were new in current compilation
-    0 functions had inline decision re-evaluated but remain unchanged
+  Previous IPDB not found, fall back to full compilation.
+  All 510 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
   Codegenerierung ist abgeschlossen.
   BasicOpenGLEngine.vcxproj -> C:\Users\Jonas Heinle\Desktop\OpenGLEngine\BasicOpenGLEngine\x64\Release\BasicOpenGLEngine.exe

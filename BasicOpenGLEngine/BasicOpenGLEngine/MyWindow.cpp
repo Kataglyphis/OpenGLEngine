@@ -16,6 +16,10 @@ MyWindow::MyWindow(GLint window_width, GLint window_height) {
 	width = window_width;
 	height = window_height;
 
+    for (size_t i = 0; i < 1024; i++) {
+        keys[i] = 0;
+    }
+
     x_change = 0.0f;
     y_change = 0.0f;
 }
@@ -75,6 +79,8 @@ int MyWindow::initialize() {
     glViewport(0, 0, buffer_width, buffer_height);
 
     glfwSetWindowUserPointer(main_window, this);
+    
+    return 0;
 }
 
 void MyWindow::create_callbacks() {
@@ -108,11 +114,11 @@ void MyWindow::handle_keys(GLFWwindow* window, int key, int code, int action, in
     if (key >= 0 && key < 1024) {
         if (action == GLFW_PRESS) {
             the_window->keys[key] = true;
-            printf("Pressed: %d\n", key);
+            //printf("Pressed: %d\n", key);
         }
         else if (action == GLFW_RELEASE) {
             the_window->keys[key] = false;
-            printf("Released: %d\n", key);
+            //printf("Released: %d\n", key);
         }
     }
 

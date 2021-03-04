@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Shader">
+      <UniqueIdentifier>{5674f6f3-17cb-4db1-ab3e-05eedf28db73}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BasicOpenGLEngine.cpp">
@@ -36,6 +39,15 @@
     <ClCompile Include="Light.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
+    <ClCompile Include="Material.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectionalLight.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="PointLight.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Mesh.h">
@@ -56,5 +68,25 @@
     <ClInclude Include="Light.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
+    <ClInclude Include="Material.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectionalLight.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="PointLight.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="GlobalValues.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Shaders\shader.frag">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="Shaders\shader.vert">
+      <Filter>Shader</Filter>
+    </None>
   </ItemGroup>
 </Project>

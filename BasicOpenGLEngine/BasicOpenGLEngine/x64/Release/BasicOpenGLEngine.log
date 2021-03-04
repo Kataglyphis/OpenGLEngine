@@ -1,23 +1,11 @@
 ﻿  BasicOpenGLEngine.cpp
 C:\Users\Jonas Heinle\Desktop\OpenGLEngine\BasicOpenGLEngine\BasicOpenGLEngine\MyWindow.h(16,38): warning C4244: "return": Konvertierung von "GLint" in "GLfloat", möglicher Datenverlust
 C:\Users\Jonas Heinle\Desktop\OpenGLEngine\BasicOpenGLEngine\BasicOpenGLEngine\MyWindow.h(17,39): warning C4244: "return": Konvertierung von "GLint" in "GLfloat", möglicher Datenverlust
-C:\Users\Jonas Heinle\Desktop\OpenGLEngine\BasicOpenGLEngine\BasicOpenGLEngine\BasicOpenGLEngine.cpp(76,66): warning C4267: "Initialisierung": Konvertierung von "size_t" nach "unsigned int", Datenverlust möglich
-C:\Users\Jonas Heinle\Desktop\OpenGLEngine\BasicOpenGLEngine\BasicOpenGLEngine\BasicOpenGLEngine.cpp(157,21): warning C4244: "Initialisierung": Konvertierung von "double" in "GLfloat", möglicher Datenverlust
-C:\Users\Jonas Heinle\Desktop\OpenGLEngine\BasicOpenGLEngine\BasicOpenGLEngine\BasicOpenGLEngine.cpp(181,107): warning C4244: "Argument": Konvertierung von "GLuint" in "GLfloat", möglicher Datenverlust
-C:\Users\Jonas Heinle\Desktop\OpenGLEngine\BasicOpenGLEngine\BasicOpenGLEngine\BasicOpenGLEngine.cpp(181,80): warning C4244: "Argument": Konvertierung von "GLuint" in "GLfloat", möglicher Datenverlust
-C:\Users\Jonas Heinle\Desktop\OpenGLEngine\BasicOpenGLEngine\BasicOpenGLEngine\BasicOpenGLEngine.cpp(181,57): warning C4244: "Argument": Konvertierung von "GLuint" in "GLfloat", möglicher Datenverlust
-C:\Users\Jonas Heinle\Desktop\OpenGLEngine\BasicOpenGLEngine\BasicOpenGLEngine\BasicOpenGLEngine.cpp(181,30): warning C4244: "Argument": Konvertierung von "GLuint" in "GLfloat", möglicher Datenverlust
-  Light.cpp
-C:\Users\Jonas Heinle\Desktop\OpenGLEngine\BasicOpenGLEngine\BasicOpenGLEngine\Light.cpp(27,14): warning C4244: "Argument": Konvertierung von "GLfloat" in "GLint", möglicher Datenverlust
-C:\Users\Jonas Heinle\Desktop\OpenGLEngine\BasicOpenGLEngine\BasicOpenGLEngine\Light.cpp(28,14): warning C4244: "Argument": Konvertierung von "GLfloat" in "GLint", möglicher Datenverlust
-C:\Users\Jonas Heinle\Desktop\OpenGLEngine\BasicOpenGLEngine\BasicOpenGLEngine\Light.cpp(29,14): warning C4244: "Argument": Konvertierung von "GLfloat" in "GLint", möglicher Datenverlust
-C:\Users\Jonas Heinle\Desktop\OpenGLEngine\BasicOpenGLEngine\BasicOpenGLEngine\Light.cpp(30,14): warning C4244: "Argument": Konvertierung von "GLfloat" in "GLint", möglicher Datenverlust
-  Mesh.cpp
-  Shader.cpp
-C:\Users\Jonas Heinle\Desktop\OpenGLEngine\BasicOpenGLEngine\BasicOpenGLEngine\Shader.cpp(148,41): warning C4267: "=": Konvertierung von "size_t" nach "GLint", Datenverlust möglich
+C:\Users\Jonas Heinle\Desktop\OpenGLEngine\BasicOpenGLEngine\BasicOpenGLEngine\BasicOpenGLEngine.cpp(85,66): warning C4267: "Initialisierung": Konvertierung von "size_t" nach "unsigned int", Datenverlust möglich
+C:\Users\Jonas Heinle\Desktop\OpenGLEngine\BasicOpenGLEngine\BasicOpenGLEngine\BasicOpenGLEngine.cpp(231,21): warning C4244: "Initialisierung": Konvertierung von "double" in "GLfloat", möglicher Datenverlust
   Code wird generiert.
-  67 of 521 functions (12.9%) were compiled, the rest were copied from previous compilation.
-    12 functions were new in current compilation
-    16 functions had inline decision re-evaluated but remain unchanged
+  1 of 545 functions ( 0.2%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    8 functions had inline decision re-evaluated but remain unchanged
   Codegenerierung ist abgeschlossen.
   BasicOpenGLEngine.vcxproj -> C:\Users\Jonas Heinle\Desktop\OpenGLEngine\BasicOpenGLEngine\x64\Release\BasicOpenGLEngine.exe

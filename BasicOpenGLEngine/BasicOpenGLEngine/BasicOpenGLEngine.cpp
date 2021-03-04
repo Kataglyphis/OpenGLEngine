@@ -16,12 +16,16 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include "GlobalValues.h"
+
 #include "Mesh.h"
 #include "Shader.h"
 #include "MyWindow.h"
 #include "Camera.h"
 #include "Texture.h"
-#include "Light.h"
+#include "DirectionalLight.h"
+#include "PointLight.h"
+#include "Material.h"
 
 const float to_radians = 3.14159265f / 180.f;
 
@@ -32,8 +36,13 @@ Camera camera;
 
 Texture ornament1;
 Texture ornament2;
+Texture plain;
 
-Light main_light;
+Material shiny_material;
+Material dull_material;
+
+DirectionalLight main_light;
+PointLight point_lights[MAX_POINT_LIGHTS];
 
 GLfloat delta_time = 0.0f;
 GLfloat last_time = 0.0f;
@@ -102,6 +111,20 @@ void create_objects() {
          0.f,  1.f,     0.f,        0.5f, 1.0f,          0.0f, 0.0f, 0.0f
     };
 
+    unsigned int floor_indices[] = {
+        0,2,1,
+        1,2,3
+    };
+
+    GLfloat floor_vertices[] = {
+        //format:
+        //x     y        z              u      v                 n_x   n_y   n_z
+        -10.f,   0.f,   -10.f,       0.0f, 0.0f,         0.0f, -1.0f, 0.0f,
+        10.0f, 0.f, -10.0f,       10.f, 0.0f,         0.0f, -1.0f, 0.0f,
+         -10.f,  0.f,    10.f,      0.f, 10.0f,          0.0f, -1.0f, 0.0f,
+         10.f,  0.f,     10.f,      10.f, 10.0f,        0.0f, -1.0f, 0.0f
+    };
+
     calc_average_normals(indices, 12, vertices, 32, 8, 5);
 
     Mesh* obj_1 = new Mesh();
@@ -111,6 +134,10 @@ void create_objects() {
     Mesh* obj_2 = new Mesh();
     obj_2->create_mesh(vertices, indices, 32, 12);
     mesh_list.push_back(obj_2);
+
+    Mesh* obj_3 =  new Mesh();
+    obj_3->create_mesh(floor_vertices, floor_indices, 32, 6);
+    mesh_list.push_back(obj_3);
 }
 
 void create_shaders() {
@@ -122,7 +149,7 @@ void create_shaders() {
 int main()
 {
     
-    main_window = MyWindow(800, 600);
+    main_window = MyWindow(1024, 768);
     main_window.initialize();
 
     create_objects();
@@ -140,15 +167,62 @@ int main()
     ornament1.load_texture();
     ornament2 = Texture(_strdup("Textures/dirt.png"));
     ornament2.load_texture();
+    plain = Texture(_strdup("Textures/plain.png"));
+    plain.load_texture();
+
+    shiny_material = Material(1.0f, 32);
+    dull_material = Material(0.3f, 4);
 
     glm::vec3 color (1.0f, 1.0f, 1.0f);
-    GLfloat a_intensity = 0.2f;
-    glm::vec3 direction (2.0f, -1.0f, -2.0f);
-    GLfloat d_intensity = 1.0f;
-    main_light = Light(color.x, color.y, color.z, a_intensity, direction.x, direction.y, direction.z, d_intensity);
+    GLfloat a_intensity = 0.1f;
+    GLfloat d_intensity = 0.3f;
+    glm::vec3 direction (0.0f, 0.0f, -1.0f);
 
-    GLuint uniform_projection = 0, uniform_model = 0, uniform_view = 0, uniform_ambient_intensity = 0, uniform_ambient_color = 0, 
-                 uniform_direction = 0, uniform_diffuse_intensity = 0;
+    main_light = DirectionalLight(color.x, color.y, color.z,
+                                                        a_intensity, d_intensity,
+                                                        direction.x, direction.y, direction.z);
+
+    unsigned int point_light_count = 0;
+
+    GLfloat red_p1 = 0.0f;
+    GLfloat green_p1 = 1.0f;
+    GLfloat blue_p1 = 0.0f;
+    GLfloat a_intensity_p1 = 0.1f;
+    GLfloat d_intensity_p1 = 1.0f;
+    GLfloat x_pos_p1 = -4.0f;
+    GLfloat y_pos_p1 = 0.0f;
+    GLfloat z_pos_p1 = 0.0f;
+    GLfloat con_p1 = 0.3f;
+    GLfloat lin_p1 = 0.2f;
+    GLfloat exp_p1 = 0.1f;
+
+    point_lights[0] = PointLight(red_p1,  green_p1,  blue_p1,
+                                                    a_intensity_p1,  d_intensity_p1,
+                                                     x_pos_p1,  y_pos_p1,  z_pos_p1,
+                                                    con_p1,  lin_p1,  exp_p1);
+    point_light_count++;
+
+    GLfloat red_p2 = 0.0f;
+    GLfloat green_p2 = 0.0f;
+    GLfloat blue_p2 = 1.0f;
+    GLfloat a_intensity_p2 = 0.1f;
+    GLfloat d_intensity_p2 = 0.4f;
+    GLfloat x_pos_p2 = 4.0f;
+    GLfloat y_pos_p2 = 0.0f;
+    GLfloat z_pos_p2 = 0.0f;
+    GLfloat con_p2 = 0.3f;
+    GLfloat lin_p2 = 0.2f;
+    GLfloat exp_p2 = 0.1f;
+
+    point_lights[1] = PointLight(red_p2, green_p2, blue_p2,
+                                                    a_intensity_p2, d_intensity_p2,
+                                                    x_pos_p2, y_pos_p2, z_pos_p2,
+                                                    con_p2, lin_p2, exp_p2);
+    point_light_count++;
+
+    GLuint uniform_projection = 0, uniform_model = 0, uniform_view = 0, uniform_eye_position = 0,
+                 uniform_specular_intensity = 0, uniform_shininess = 0;
+
     glm::mat4 projection = glm::perspective(45.f, main_window.get_buffer_width()/main_window.get_buffer_height(), 0.1f, 100.f);
 
     // loop until window closed
@@ -173,20 +247,24 @@ int main()
         uniform_model = shader_list[0].get_model_location();
         uniform_projection = shader_list[0].get_projection_location();
         uniform_view = shader_list[0].get_view_location();
-        uniform_ambient_intensity = shader_list[0].get_ambient_intensity_location();
-        uniform_ambient_color = shader_list[0].get_ambient_color_location();
-        uniform_direction = shader_list[0].get_direction_location();
-        uniform_diffuse_intensity = shader_list[0].get_diffuse_intensity_location();
-
-        main_light.use_light(uniform_ambient_intensity, uniform_ambient_color, uniform_diffuse_intensity, uniform_direction);
         
+        uniform_eye_position = shader_list[0].get_eye_position_location();
+        uniform_specular_intensity = shader_list[0].get_specular_intensity_location();
+        uniform_shininess = shader_list[0].get_shininess_location();
+
+        shader_list[0].set_directional_light(&main_light);
+        shader_list[0].set_point_lights(point_lights, point_light_count);
+        
+        glUniformMatrix4fv(uniform_projection, 1, GL_FALSE, glm::value_ptr(projection));
+        glUniformMatrix4fv(uniform_view, 1, GL_FALSE, glm::value_ptr(camera.calculate_viewmatrix()));
+        glUniform3f(uniform_eye_position, camera.get_camera_position().x, camera.get_camera_position().y, camera.get_camera_position().z);
+
         glm::mat4 model(1.0f);
         model = glm::translate(model, glm::vec3(0.0f, 0.0f, -2.5f));
         model = glm::scale(model, glm::vec3(0.4f, 0.4f, 1.0f));
         glUniformMatrix4fv(uniform_model, 1, GL_FALSE, glm::value_ptr(model));
-        glUniformMatrix4fv(uniform_projection, 1, GL_FALSE, glm::value_ptr(projection));
-        glUniformMatrix4fv(uniform_view, 1, GL_FALSE, glm::value_ptr(camera.calculate_viewmatrix()));
         ornament1.use_texture();
+        shiny_material.use_material(uniform_specular_intensity, uniform_shininess);
         mesh_list[0]->render_mesh();
 
         model = glm::mat4(1.0f);
@@ -194,7 +272,16 @@ int main()
         model = glm::scale(model, glm::vec3(0.4f, 0.4f, 1.0f));
         glUniformMatrix4fv(uniform_model, 1, GL_FALSE, glm::value_ptr(model));
         ornament2.use_texture();
+        dull_material.use_material(uniform_specular_intensity, uniform_shininess);
         mesh_list[1]->render_mesh();
+
+        model = glm::mat4(1.0f);
+        model = glm::translate(model, glm::vec3(0.0f, -2.0f, 0.0f));
+        //model = glm::scale(model, glm::vec3(0.4f, 0.4f, 1.0f));
+        glUniformMatrix4fv(uniform_model, 1, GL_FALSE, glm::value_ptr(model));
+        plain.use_texture();
+        dull_material.use_material(uniform_specular_intensity, uniform_shininess);
+        mesh_list[2]->render_mesh();
 
         glUseProgram(0);
 

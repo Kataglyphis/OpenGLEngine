@@ -125,7 +125,7 @@ vec4 calc_spot_light(SpotLight s_light) {
     if(s1_factor > s_light.edge) {
     
         vec4 color = calc_point_light(s_light.base);
-        return color;
+        return color * (1.0f - (1.0f - s1_factor) * (1.0f / (1.0f - s_light.edge))) ;
     
     } else {
 
@@ -148,6 +148,7 @@ vec4 calc_spot_lights() {
     return total_color;
 
 }
+
 
 
 

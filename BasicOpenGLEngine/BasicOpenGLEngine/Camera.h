@@ -17,6 +17,7 @@ public:
 	void mouse_control(GLfloat x_change, GLfloat y_change);
 
 	glm::vec3 get_camera_position();
+	glm::vec3 get_camera_direction();
 
 	glm::mat4 calculate_viewmatrix();
 

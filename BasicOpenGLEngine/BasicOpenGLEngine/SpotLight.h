@@ -22,6 +22,8 @@ public:
                             GLuint constant_location, GLuint linear_location, GLuint exponent_location,
                             GLuint edge_location);
 
+    void set_flash(glm::vec3 pos, glm::vec3 dir);
+
 private:
     glm::vec3 direction;
 

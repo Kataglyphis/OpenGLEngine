@@ -81,6 +81,11 @@ glm::vec3 Camera::get_camera_position()
 	return position;
 }
 
+glm::vec3 Camera::get_camera_direction()
+{
+	return glm::normalize(front);
+}
+
 glm::mat4 Camera::calculate_viewmatrix() {
 
 	return glm::lookAt(position, position + front, up);

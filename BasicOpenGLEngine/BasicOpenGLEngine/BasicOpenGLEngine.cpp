@@ -172,17 +172,12 @@ int main()
     plain = Texture(_strdup("Textures/plain.png"));
     plain.load_texture();
 
-    shiny_material = Material(1.0f, 32);
+    shiny_material = Material(4.0f, 256);
     dull_material = Material(0.3f, 4);
 
-    glm::vec3 color (1.0f, 1.0f, 1.0f);
-    GLfloat a_intensity = 0.1f;
-    GLfloat d_intensity = 0.3f;
-    glm::vec3 direction (0.0f, 0.0f, -1.0f);
-
-    main_light = DirectionalLight(color.x, color.y, color.z,
-                                                        a_intensity, d_intensity,
-                                                        direction.x, direction.y, direction.z);
+    main_light = DirectionalLight(1.0f, 1.0f, 1.0f,
+                                                        0.0f, 0.0f,
+                                                        0.0f, 0.0f, -1.0f);
 
     unsigned int point_light_count = 0;
 
@@ -191,7 +186,7 @@ int main()
                                                     -4.0f, 0.0f, 0.0f,
                                                     0.3f, 0.2f, 0.1f);
 
-    point_light_count++;
+    //point_light_count++;
 
 
     point_lights[1] = PointLight(0.0f, 0.0f, 1.0f,
@@ -199,15 +194,24 @@ int main()
                                                     4.0f, 0.0f, 0.0f,
                                                     0.3f, 0.2f, 0.1f);
 
-    point_light_count++;
+    //point_light_count++;
 
     unsigned int spot_light_count = 0;
 
-    spot_lights[0] = SpotLight(0.0f, 0.0f, 1.0f,
-                                                    0.0f, 0.1f,
+    spot_lights[0] = SpotLight(1.0f, 1.0f, 1.0f,
+                                                    0.0f, 1.0f,
                                                     0.0f, 0.0f, 0.0f,
                                                     0.0f, -1.0f, 0.0f,
-                                                    0.3f, 0.2f, 0.1f,
+                                                    1.0f, 0.0f, 0.0f,
+                                                    20.0f);
+
+    spot_light_count++;
+
+    spot_lights[1] = SpotLight(1.0f, 1.0f, 1.0f,
+                                                    0.0f, 1.0f,
+                                                    0.0f, 1.5f, 0.0f,
+                                                    -100.0f, -1.0f, 0.0f,
+                                                    1.0f, 0.0f, 0.0f,
                                                     20.0f);
 
     spot_light_count++;
@@ -244,6 +248,8 @@ int main()
         uniform_specular_intensity = shader_list[0].get_specular_intensity_location();
         uniform_shininess = shader_list[0].get_shininess_location();
 
+        spot_lights[0].set_flash(camera.get_camera_position(), camera.get_camera_position());
+
         shader_list[0].set_directional_light(&main_light);
         shader_list[0].set_point_lights(point_lights, point_light_count);
         shader_list[0].set_spot_lights(spot_lights, spot_light_count);
@@ -254,15 +260,15 @@ int main()
 
         glm::mat4 model(1.0f);
         model = glm::translate(model, glm::vec3(0.0f, 0.0f, -2.5f));
-        model = glm::scale(model, glm::vec3(0.4f, 0.4f, 1.0f));
+        //model = glm::scale(model, glm::vec3(0.4f, 0.4f, 1.0f));
         glUniformMatrix4fv(uniform_model, 1, GL_FALSE, glm::value_ptr(model));
         ornament1.use_texture();
         shiny_material.use_material(uniform_specular_intensity, uniform_shininess);
         mesh_list[0]->render_mesh();
 
         model = glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(0.0f, 1.0f, -2.5f));
-        model = glm::scale(model, glm::vec3(0.4f, 0.4f, 1.0f));
+        model = glm::translate(model, glm::vec3(0.0f, 4.0f, -2.5f));
+        //model = glm::scale(model, glm::vec3(0.4f, 0.4f, 1.0f));
         glUniformMatrix4fv(uniform_model, 1, GL_FALSE, glm::value_ptr(model));
         ornament2.use_texture();
         dull_material.use_material(uniform_specular_intensity, uniform_shininess);
@@ -272,8 +278,8 @@ int main()
         model = glm::translate(model, glm::vec3(0.0f, -2.0f, 0.0f));
         //model = glm::scale(model, glm::vec3(0.4f, 0.4f, 1.0f));
         glUniformMatrix4fv(uniform_model, 1, GL_FALSE, glm::value_ptr(model));
-        plain.use_texture();
-        dull_material.use_material(uniform_specular_intensity, uniform_shininess);
+        ornament2.use_texture();
+        shiny_material.use_material(uniform_specular_intensity, uniform_shininess);
         mesh_list[2]->render_mesh();
 
         glUseProgram(0);

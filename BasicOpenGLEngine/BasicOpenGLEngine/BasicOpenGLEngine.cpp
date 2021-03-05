@@ -25,6 +25,7 @@
 #include "Texture.h"
 #include "DirectionalLight.h"
 #include "PointLight.h"
+#include "SpotLight.h"
 #include "Material.h"
 
 const float to_radians = 3.14159265f / 180.f;
@@ -43,6 +44,7 @@ Material dull_material;
 
 DirectionalLight main_light;
 PointLight point_lights[MAX_POINT_LIGHTS];
+SpotLight spot_lights[MAX_SPOT_LIGHTS];
 
 GLfloat delta_time = 0.0f;
 GLfloat last_time = 0.0f;
@@ -184,41 +186,31 @@ int main()
 
     unsigned int point_light_count = 0;
 
-    GLfloat red_p1 = 0.0f;
-    GLfloat green_p1 = 1.0f;
-    GLfloat blue_p1 = 0.0f;
-    GLfloat a_intensity_p1 = 0.1f;
-    GLfloat d_intensity_p1 = 1.0f;
-    GLfloat x_pos_p1 = -4.0f;
-    GLfloat y_pos_p1 = 0.0f;
-    GLfloat z_pos_p1 = 0.0f;
-    GLfloat con_p1 = 0.3f;
-    GLfloat lin_p1 = 0.2f;
-    GLfloat exp_p1 = 0.1f;
+    point_lights[0] = PointLight(0.0f, 1.0f, 0.0f,
+                                                    0.1f, 1.0f,
+                                                    -4.0f, 0.0f, 0.0f,
+                                                    0.3f, 0.2f, 0.1f);
 
-    point_lights[0] = PointLight(red_p1,  green_p1,  blue_p1,
-                                                    a_intensity_p1,  d_intensity_p1,
-                                                     x_pos_p1,  y_pos_p1,  z_pos_p1,
-                                                    con_p1,  lin_p1,  exp_p1);
     point_light_count++;
 
-    GLfloat red_p2 = 0.0f;
-    GLfloat green_p2 = 0.0f;
-    GLfloat blue_p2 = 1.0f;
-    GLfloat a_intensity_p2 = 0.1f;
-    GLfloat d_intensity_p2 = 0.4f;
-    GLfloat x_pos_p2 = 4.0f;
-    GLfloat y_pos_p2 = 0.0f;
-    GLfloat z_pos_p2 = 0.0f;
-    GLfloat con_p2 = 0.3f;
-    GLfloat lin_p2 = 0.2f;
-    GLfloat exp_p2 = 0.1f;
 
-    point_lights[1] = PointLight(red_p2, green_p2, blue_p2,
-                                                    a_intensity_p2, d_intensity_p2,
-                                                    x_pos_p2, y_pos_p2, z_pos_p2,
-                                                    con_p2, lin_p2, exp_p2);
+    point_lights[1] = PointLight(0.0f, 0.0f, 1.0f,
+                                                    0.0f, 0.1f,
+                                                    4.0f, 0.0f, 0.0f,
+                                                    0.3f, 0.2f, 0.1f);
+
     point_light_count++;
+
+    unsigned int spot_light_count = 0;
+
+    spot_lights[0] = SpotLight(0.0f, 0.0f, 1.0f,
+                                                    0.0f, 0.1f,
+                                                    0.0f, 0.0f, 0.0f,
+                                                    0.0f, -1.0f, 0.0f,
+                                                    0.3f, 0.2f, 0.1f,
+                                                    20.0f);
+
+    spot_light_count++;
 
     GLuint uniform_projection = 0, uniform_model = 0, uniform_view = 0, uniform_eye_position = 0,
                  uniform_specular_intensity = 0, uniform_shininess = 0;
@@ -254,6 +246,7 @@ int main()
 
         shader_list[0].set_directional_light(&main_light);
         shader_list[0].set_point_lights(point_lights, point_light_count);
+        shader_list[0].set_spot_lights(spot_lights, spot_light_count);
         
         glUniformMatrix4fv(uniform_projection, 1, GL_FALSE, glm::value_ptr(projection));
         glUniformMatrix4fv(uniform_view, 1, GL_FALSE, glm::value_ptr(camera.calculate_viewmatrix()));

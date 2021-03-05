@@ -249,7 +249,7 @@ int main()
         uniform_shininess = shader_list[0].get_shininess_location();
 
         spot_lights[0].set_flash(camera.get_camera_position(), camera.get_camera_position());
-
+        
         shader_list[0].set_directional_light(&main_light);
         shader_list[0].set_point_lights(point_lights, point_light_count);
         shader_list[0].set_spot_lights(spot_lights, spot_light_count);

@@ -12,7 +12,9 @@ public:
 	Texture();
 	Texture(char* file_loc);
 
-	void load_texture();
+	bool load_texture();
+	bool load_texture_A();
+
 	void use_texture();
 	void clear_texture();
 

@@ -159,10 +159,10 @@ int main()
 
     glm::vec3 start_position = glm::vec3(0.0f, 0.0f, 0.0f);
     glm::vec3 start_up = glm::vec3(0.0f, 1.0f, 0.0f);
-    GLfloat start_yaw = -90.0f;
+    GLfloat start_yaw = -60.0f;
     GLfloat start_pitch = 0.0f;
     GLfloat start_move_speed = 5.0f;
-    GLfloat start_turn_speed = 0.1f;
+    GLfloat start_turn_speed = 0.5f;
     camera = Camera(start_position, start_up, start_yaw, start_pitch, start_move_speed, start_turn_speed);
 
     ornament1 = Texture(_strdup("Textures/brick.png"));
@@ -176,30 +176,30 @@ int main()
     dull_material = Material(0.3f, 4);
 
     main_light = DirectionalLight(1.0f, 1.0f, 1.0f,
-                                                        0.0f, 0.0f,
+                                                        0.1f, 0.1f,
                                                         0.0f, 0.0f, -1.0f);
 
     unsigned int point_light_count = 0;
 
-    point_lights[0] = PointLight(0.0f, 1.0f, 0.0f,
-                                                    0.1f, 1.0f,
-                                                    -4.0f, 0.0f, 0.0f,
+    point_lights[0] = PointLight(0.0f, 0.0f, 1.0f,
+                                                    0.0f, 1.0f,
+                                                    0.0f, 0.0f, 0.0f,
                                                     0.3f, 0.2f, 0.1f);
 
     //point_light_count++;
 
 
-    point_lights[1] = PointLight(0.0f, 0.0f, 1.0f,
+    point_lights[1] = PointLight(0.0f, 1.0f, 0.0f,
                                                     0.0f, 0.1f,
-                                                    4.0f, 0.0f, 0.0f,
-                                                    0.3f, 0.2f, 0.1f);
+                                                    -4.0f, 2.0f, 0.0f,
+                                                    0.3f, 0.1f, 0.1f);
 
     //point_light_count++;
 
     unsigned int spot_light_count = 0;
 
     spot_lights[0] = SpotLight(1.0f, 1.0f, 1.0f,
-                                                    0.0f, 1.0f,
+                                                    1.0f, 2.0f,
                                                     0.0f, 0.0f, 0.0f,
                                                     0.0f, -1.0f, 0.0f,
                                                     1.0f, 0.0f, 0.0f,
@@ -209,7 +209,7 @@ int main()
 
     spot_lights[1] = SpotLight(1.0f, 1.0f, 1.0f,
                                                     0.0f, 1.0f,
-                                                    0.0f, 1.5f, 0.0f,
+                                                    0.0f, -1.5f, 0.0f,
                                                     -100.0f, -1.0f, 0.0f,
                                                     1.0f, 0.0f, 0.0f,
                                                     20.0f);
@@ -248,7 +248,7 @@ int main()
         uniform_specular_intensity = shader_list[0].get_specular_intensity_location();
         uniform_shininess = shader_list[0].get_shininess_location();
 
-        spot_lights[0].set_flash(camera.get_camera_position(), camera.get_camera_position());
+        spot_lights[0].set_flash(camera.get_camera_position(), camera.get_camera_direction());
         
         shader_list[0].set_directional_light(&main_light);
         shader_list[0].set_point_lights(point_lights, point_light_count);

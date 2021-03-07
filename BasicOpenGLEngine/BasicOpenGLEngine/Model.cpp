@@ -1,5 +1,9 @@
 #include "Model.h"
 
+Model::Model()
+{
+}
+
 void Model::load_model(const std::string& file_name)
 {
 
@@ -16,12 +20,41 @@ void Model::load_model(const std::string& file_name)
 	load_materials(scene);
 }
 
-void Model::render_model()
-{
-}
-
 void Model::clear_model()
 {
+
+	for (size_t i = 0; i < mesh_list.size(); i++) {
+
+		if (mesh_list[i]) {
+			delete mesh_list[i];
+			mesh_list[i] = nullptr;
+		}
+
+	}
+
+	for (size_t i = 0; i < texture_list.size(); i++) {
+
+		if (texture_list[i]) {
+			delete texture_list[i];
+			texture_list[i] = nullptr;
+		}
+
+	}
+}
+
+void Model::render_model()
+{
+
+	for (size_t i = 0; i < mesh_list.size(); i++) {
+
+		unsigned int material_index = mesh_to_tex[i];
+		if (material_index < texture_list.size() && texture_list[material_index]) {
+			texture_list[material_index]->use_texture();
+		}
+
+		mesh_list[i]->render_mesh();
+	}
+
 }
 
 Model::~Model()
@@ -80,4 +113,36 @@ void Model::load_materials(const aiScene* scene)
 
 	texture_list.resize(scene->mNumMaterials);
 
+	for (size_t i = 0; i < scene->mNumMaterials; i++) {
+		
+		aiMaterial* material = scene->mMaterials[i];
+		
+		texture_list[i] = nullptr;
+
+		if (material->GetTextureCount(aiTextureType_DIFFUSE)) {
+			aiString path;
+			if (material->GetTexture(aiTextureType_DIFFUSE, 0, &path) == AI_SUCCESS) {
+				int index = std::string(path.data).rfind("\\");
+				std::string file_name = std::string(path.data).substr(index + 1);
+
+				std::string texture_path = std::string("Textures/") + file_name;
+
+				texture_list[i] = new Texture(texture_path.c_str());
+
+				if (!texture_list[i]->load_texture()) {
+					printf("Failed to load texture at: %s\n", texture_path);
+					delete texture_list[i];
+					texture_list[i] = nullptr;
+				}
+			}
+		}
+
+		if (!texture_list[i]) {
+
+			texture_list[i] = new Texture("Textures/plain.png");
+			texture_list[i]->load_texture_A();
+
+		}
+
+	}
 }

@@ -10,7 +10,7 @@ Texture::Texture() {
 
 }
 
-Texture::Texture(char* file_loc) {
+Texture::Texture(const char* file_loc) {
 
 	textureID = 0;
 	width = 0;

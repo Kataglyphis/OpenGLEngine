@@ -28,7 +28,7 @@
 #include "SpotLight.h"
 #include "Material.h"
 
-#include <assimp/importer.hpp>
+#include "Model.h"
 
 const float to_radians = 3.14159265f / 180.f;
 
@@ -43,6 +43,8 @@ Texture plain;
 
 Material shiny_material;
 Material dull_material;
+
+Model house;
 
 DirectionalLight main_light;
 PointLight point_lights[MAX_POINT_LIGHTS];
@@ -177,6 +179,9 @@ int main()
     shiny_material = Material(4.0f, 256);
     dull_material = Material(0.3f, 4);
 
+    house = Model();
+    house.load_model("Models/Big_Old_House.obj");
+
     main_light = DirectionalLight(1.0f, 1.0f, 1.0f,
                                                         0.1f, 0.1f,
                                                         0.0f, 0.0f, -1.0f);
@@ -223,7 +228,6 @@ int main()
 
     glm::mat4 projection = glm::perspective(45.f, main_window.get_buffer_width()/main_window.get_buffer_height(), 0.1f, 100.f);
 
-    Assimp::Importer importer;
 
     // loop until window closed
     while (!main_window.get_should_close()) {
@@ -287,6 +291,13 @@ int main()
         ornament2.use_texture();
         shiny_material.use_material(uniform_specular_intensity, uniform_shininess);
         mesh_list[2]->render_mesh();
+
+        model = glm::mat4(1.0f);
+        model = glm::translate(model, glm::vec3(0.0f, -2.0f, 0.0f));
+        //model = glm::scale(model, glm::vec3(0.4f, 0.4f, 1.0f));
+        glUniformMatrix4fv(uniform_model, 1, GL_FALSE, glm::value_ptr(model));
+        shiny_material.use_material(uniform_specular_intensity, uniform_shininess);
+        house.render_model();
 
         glUseProgram(0);
 

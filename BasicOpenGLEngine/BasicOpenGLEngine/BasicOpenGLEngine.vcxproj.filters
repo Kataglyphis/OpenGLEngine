@@ -51,6 +51,12 @@
     <ClCompile Include="SpotLight.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
+    <ClCompile Include="Model.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="ShadowMap.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Mesh.h">
@@ -86,12 +92,24 @@
     <ClInclude Include="SpotLight.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
+    <ClInclude Include="Model.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="ShadowMap.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\shader.frag">
       <Filter>Shader</Filter>
     </None>
     <None Include="Shaders\shader.vert">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="Shaders\directional_shadow_map.frag">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="Shaders\directional_shadow_map.vert">
       <Filter>Shader</Filter>
     </None>
   </ItemGroup>

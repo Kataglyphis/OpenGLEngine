@@ -4,7 +4,7 @@ Shader::Shader() {
 
 	shader_id = 0;
 	uniform_model = 0;
-    uniform_view = 0;
+    //uniform_view = 0;
 	uniform_projection = 0;
 
     point_light_counter = 0;

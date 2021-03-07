@@ -4,6 +4,7 @@ in vec4 v_color;
 in vec2 tex_coord;
 in vec3 normal;
 in vec3 frag_pos;
+in vec4 directional_light_space_pos;
 
 out vec4 color;                                  
 
@@ -52,6 +53,7 @@ struct Material {
 };
 
 uniform sampler2D first_texture;
+uniform sampler2D directional_shadow_map;
 
 uniform int point_light_count;
 uniform int spot_light_count;

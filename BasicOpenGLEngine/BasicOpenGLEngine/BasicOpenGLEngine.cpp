@@ -28,6 +28,8 @@
 #include "SpotLight.h"
 #include "Material.h"
 
+#include "Model.h"
+
 const float to_radians = 3.14159265f / 180.f;
 
 MyWindow main_window;
@@ -41,6 +43,8 @@ Texture plain;
 
 Material shiny_material;
 Material dull_material;
+
+Model house;
 
 DirectionalLight main_light;
 PointLight point_lights[MAX_POINT_LIGHTS];
@@ -159,47 +163,50 @@ int main()
 
     glm::vec3 start_position = glm::vec3(0.0f, 0.0f, 0.0f);
     glm::vec3 start_up = glm::vec3(0.0f, 1.0f, 0.0f);
-    GLfloat start_yaw = -90.0f;
+    GLfloat start_yaw = -60.0f;
     GLfloat start_pitch = 0.0f;
     GLfloat start_move_speed = 5.0f;
-    GLfloat start_turn_speed = 0.1f;
+    GLfloat start_turn_speed = 0.5f;
     camera = Camera(start_position, start_up, start_yaw, start_pitch, start_move_speed, start_turn_speed);
 
     ornament1 = Texture(_strdup("Textures/brick.png"));
-    ornament1.load_texture();
+    ornament1.load_texture_A();
     ornament2 = Texture(_strdup("Textures/dirt.png"));
-    ornament2.load_texture();
+    ornament2.load_texture_A();
     plain = Texture(_strdup("Textures/plain.png"));
-    plain.load_texture();
+    plain.load_texture_A();
 
     shiny_material = Material(4.0f, 256);
     dull_material = Material(0.3f, 4);
 
+    house = Model();
+    house.load_model("Models/Big_Old_House.obj");
+
     main_light = DirectionalLight(1.0f, 1.0f, 1.0f,
-                                                        0.0f, 0.0f,
+                                                        0.1f, 0.1f,
                                                         0.0f, 0.0f, -1.0f);
 
     unsigned int point_light_count = 0;
 
-    point_lights[0] = PointLight(0.0f, 1.0f, 0.0f,
-                                                    0.1f, 1.0f,
-                                                    -4.0f, 0.0f, 0.0f,
+    point_lights[0] = PointLight(0.0f, 0.0f, 1.0f,
+                                                    0.0f, 1.0f,
+                                                    0.0f, 0.0f, 0.0f,
                                                     0.3f, 0.2f, 0.1f);
 
     //point_light_count++;
 
 
-    point_lights[1] = PointLight(0.0f, 0.0f, 1.0f,
+    point_lights[1] = PointLight(0.0f, 1.0f, 0.0f,
                                                     0.0f, 0.1f,
-                                                    4.0f, 0.0f, 0.0f,
-                                                    0.3f, 0.2f, 0.1f);
+                                                    -4.0f, 2.0f, 0.0f,
+                                                    0.3f, 0.1f, 0.1f);
 
     //point_light_count++;
 
     unsigned int spot_light_count = 0;
 
     spot_lights[0] = SpotLight(1.0f, 1.0f, 1.0f,
-                                                    0.0f, 1.0f,
+                                                    1.0f, 2.0f,
                                                     0.0f, 0.0f, 0.0f,
                                                     0.0f, -1.0f, 0.0f,
                                                     1.0f, 0.0f, 0.0f,
@@ -209,7 +216,7 @@ int main()
 
     spot_lights[1] = SpotLight(1.0f, 1.0f, 1.0f,
                                                     0.0f, 1.0f,
-                                                    0.0f, 1.5f, 0.0f,
+                                                    0.0f, -1.5f, 0.0f,
                                                     -100.0f, -1.0f, 0.0f,
                                                     1.0f, 0.0f, 0.0f,
                                                     20.0f);
@@ -220,6 +227,7 @@ int main()
                  uniform_specular_intensity = 0, uniform_shininess = 0;
 
     glm::mat4 projection = glm::perspective(45.f, main_window.get_buffer_width()/main_window.get_buffer_height(), 0.1f, 100.f);
+
 
     // loop until window closed
     while (!main_window.get_should_close()) {
@@ -248,7 +256,9 @@ int main()
         uniform_specular_intensity = shader_list[0].get_specular_intensity_location();
         uniform_shininess = shader_list[0].get_shininess_location();
 
-        spot_lights[0].set_flash(camera.get_camera_position(), camera.get_camera_position());
+        glm::vec3 lower_light = camera.get_camera_position();
+        lower_light.y -= 0.3f;
+        spot_lights[0].set_flash(lower_light, camera.get_camera_direction());
         
         shader_list[0].set_directional_light(&main_light);
         shader_list[0].set_point_lights(point_lights, point_light_count);
@@ -281,6 +291,13 @@ int main()
         ornament2.use_texture();
         shiny_material.use_material(uniform_specular_intensity, uniform_shininess);
         mesh_list[2]->render_mesh();
+
+        model = glm::mat4(1.0f);
+        model = glm::translate(model, glm::vec3(0.0f, -2.0f, 0.0f));
+        //model = glm::scale(model, glm::vec3(0.4f, 0.4f, 1.0f));
+        glUniformMatrix4fv(uniform_model, 1, GL_FALSE, glm::value_ptr(model));
+        shiny_material.use_material(uniform_specular_intensity, uniform_shininess);
+        house.render_model();
 
         glUseProgram(0);
 

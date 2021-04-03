@@ -67,9 +67,43 @@ uniform Material material;
 
 uniform vec3 eye_position;
 
+float calc_directional_shadow_factor(DirectionalLight light) {
+    
+    vec3 proj_coords = directional_light_space_pos.xyz / directional_light_space_pos.w;
+    proj_coords = (proj_coords * 0.5f) + 0.5f; 
 
+    float current = proj_coords.z;
 
-vec4 calc_light_by_direction(Light light, vec3 direction) {
+    float cos_val = dot(normalize(normal), normalize(light.direction));
+    float bias = max(0.05f * (1.f - cos_val), 0.005f);
+
+    float shadow = 0.0f;
+
+    vec2 texel_size = 1.0f / textureSize(directional_shadow_map, 0);
+
+    for(int x = -1; x <= 1; ++x) {
+        for(int y = -1; y <= 1; ++y) {
+        
+            float pcf_depth = texture(directional_shadow_map, proj_coords.xy + vec2(x,y) * texel_size).r;
+            shadow += current - bias > pcf_depth ? 1.0f : 0.0f;
+        
+        }
+    }
+
+    shadow /= 9.0f;
+
+    //if shadow map is nearer than far_plane
+    if(proj_coords.z > 1.0) {
+        
+        shadow = 0.0;
+
+    }
+
+    return shadow;
+
+}
+
+vec4 calc_light_by_direction(Light light, vec3 direction, float shadow_factor) {
     
     vec4 ambient_color = vec4(light.color, 1.0f) * light.ambient_intensity;
     float diffuse_factor = max(dot(normalize(normal), normalize(direction)), 0.0f);
@@ -91,14 +125,15 @@ vec4 calc_light_by_direction(Light light, vec3 direction) {
         }
     }
 
-    return  (ambient_color + diffuse_color + specular_color);
+    return  ambient_color + (1.0f - shadow_factor) * (diffuse_color + specular_color);
 
 }
 
 
 vec4 calc_directional_light() {
-
-    return calc_light_by_direction(directional_light.base, directional_light.direction);
+    
+    float shadow_factor = calc_directional_shadow_factor(directional_light);
+    return calc_light_by_direction(directional_light.base, directional_light.direction, shadow_factor);
 
 }
 
@@ -109,7 +144,7 @@ vec4 calc_point_light(PointLight p_light) {
     float distance = length(direction);
     direction = normalize(direction);
 
-    vec4 color = calc_light_by_direction(p_light.base, direction);
+    vec4 color = calc_light_by_direction(p_light.base, direction, 0.0f);
     float attentuation = p_light.exponent * pow(distance,2) 
                                     +  p_light.linear        * distance
                                     +  p_light.constant;

@@ -1,6 +1,0 @@
-﻿  BasicOpenGLEngine.cpp
-C:\Users\Jonas Heinle\Desktop\OpenGLEngine\BasicOpenGLEngine\BasicOpenGLEngine\MyWindow.h(16,38): warning C4244: "return": Konvertierung von "GLint" in "GLfloat", möglicher Datenverlust
-C:\Users\Jonas Heinle\Desktop\OpenGLEngine\BasicOpenGLEngine\BasicOpenGLEngine\MyWindow.h(17,39): warning C4244: "return": Konvertierung von "GLint" in "GLfloat", möglicher Datenverlust
-C:\Users\Jonas Heinle\Desktop\OpenGLEngine\BasicOpenGLEngine\BasicOpenGLEngine\BasicOpenGLEngine.cpp(104,21): warning C4244: "Initialisierung": Konvertierung von "double" in "GLfloat", möglicher Datenverlust
-LINK : warning LNK4098: Standardbibliothek "MSVCRT" steht in Konflikt mit anderen Bibliotheken; /NODEFAULTLIB:Bibliothek verwenden.
-  BasicOpenGLEngine.vcxproj -> C:\Users\Jonas Heinle\Desktop\OpenGLEngine\BasicOpenGLEngine\x64\Debug\BasicOpenGLEngine.exe

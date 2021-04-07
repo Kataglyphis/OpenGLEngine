@@ -1,0 +1,2 @@
+BasicOpenGLEngine/Models/** filter=lfs diff=lfs merge=lfs -text
+BasicOpenGLEngine/Textures/** filter=lfs diff=lfs merge=lfs -text

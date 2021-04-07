@@ -361,7 +361,8 @@ FodyWeavers.xsd
 
 #All personal folders/files
 ExternalLibs/
-BasicOpenGLEngine/BasicOpenGLEngine/Models/
-BasicOpenGLEngine/BasicOpenGLEngine/Textures/
+# Added them with glfs :)
+# BasicOpenGLEngine/BasicOpenGLEngine/Models/
+# BasicOpenGLEngine/BasicOpenGLEngine/Textures/
 # exclude intellisense files
 BasicOpenGLEngine/.vs/

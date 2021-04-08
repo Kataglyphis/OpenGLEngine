@@ -1,6 +1,6 @@
 <h1 align="center">
   <br>
-  <a href="https://jotrocken.blog/"><img src="" alt="OpenGLEngine" width="200"></a>
+  <a href="https://jotrocken.blog/"><img src="images/logo.png" alt="OpenGLEngine" width="200"></a>
   <br>
   Cataglyphis_Engine
   <br>
@@ -25,6 +25,9 @@
       <a href="#about-the-project">About The Project</a>
       <ul>
         <li><a href="#built-with">Built With</a></li>
+      </ul>
+      <ul>
+        <li><a href="#key-features">Key Features</a></li>
       </ul>
     </li>
     <li>
@@ -59,7 +62,7 @@ Of course, no one template will serve all projects since your needs may be diffe
 
 A list of commonly used resources that I find helpful are listed in the acknowledgements.
 
-## Key Features
+### Key Features
 
 
 |          Feature           |   Implement Status | ◾ Other Configs |

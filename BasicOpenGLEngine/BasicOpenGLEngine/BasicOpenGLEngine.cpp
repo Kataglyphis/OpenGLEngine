@@ -32,9 +32,14 @@
 
 const float to_radians = 3.14159265f / 180.f;
 
+GLuint uniform_projection = 0, uniform_model = 0, uniform_view = 0, uniform_eye_position = 0,
+             uniform_specular_intensity = 0, uniform_shininess = 0;
+
 MyWindow main_window;
 std::vector<Mesh*> mesh_list;
 std::vector<Shader> shader_list;
+Shader directional_shadow_shader;
+
 Camera camera;
 
 Texture ornament1;
@@ -44,12 +49,14 @@ Texture plain;
 Material shiny_material;
 Material dull_material;
 
-Model house;
+Model model;
 
 DirectionalLight main_light;
 PointLight point_lights[MAX_POINT_LIGHTS];
 SpotLight spot_lights[MAX_SPOT_LIGHTS];
 
+unsigned int point_light_count = 0;
+unsigned int spot_light_count = 0;
 GLfloat delta_time = 0.0f;
 GLfloat last_time = 0.0f;
 
@@ -150,6 +157,102 @@ void create_shaders() {
     Shader* shader1 = new Shader();
     shader1->create_from_files(vertex_shader, fragment_shader);
     shader_list.push_back(*shader1);
+
+    directional_shadow_shader = Shader();
+    directional_shadow_shader.create_from_files("Shaders/directional_shadow_map.vert", "Shaders/directional_shadow_map.frag");
+}
+
+void render_scene() {
+
+    glm::mat4 model_matrix(1.0f);
+    model_matrix = glm::translate(model_matrix, glm::vec3(0.0f, 0.0f, -2.5f));
+    //model_matrix = glm::scale(model_matrix, glm::vec3(0.4f, 0.4f, 1.0f));
+    glUniformMatrix4fv(uniform_model, 1, GL_FALSE, glm::value_ptr(model_matrix));
+    ornament1.use_texture();
+    shiny_material.use_material(uniform_specular_intensity, uniform_shininess);
+    mesh_list[0]->render_mesh();
+
+    model_matrix = glm::mat4(1.0f);
+    model_matrix = glm::translate(model_matrix, glm::vec3(0.0f, 4.0f, -2.5f));
+    //model_matrix = glm::scale(model_matrix, glm::vec3(0.4f, 0.4f, 1.0f));
+    glUniformMatrix4fv(uniform_model, 1, GL_FALSE, glm::value_ptr(model_matrix));
+    ornament2.use_texture();
+    dull_material.use_material(uniform_specular_intensity, uniform_shininess);
+    mesh_list[1]->render_mesh();
+
+    model_matrix = glm::mat4(1.0f);
+    model_matrix = glm::translate(model_matrix, glm::vec3(0.0f, -2.0f, 0.0f));
+    //model = glm::scale(model, glm::vec3(0.4f, 0.4f, 1.0f));
+    glUniformMatrix4fv(uniform_model, 1, GL_FALSE, glm::value_ptr(model_matrix));
+    ornament2.use_texture();
+    shiny_material.use_material(uniform_specular_intensity, uniform_shininess);
+    mesh_list[2]->render_mesh();
+
+    model_matrix = glm::mat4(1.0f);
+    model_matrix = glm::translate(model_matrix, glm::vec3(0.0f, 5.0f, 0.0f));
+    //model = glm::scale(model, glm::vec3(0.4f, 0.4f, 1.0f));
+    glUniformMatrix4fv(uniform_model, 1, GL_FALSE, glm::value_ptr(model_matrix));
+    shiny_material.use_material(uniform_specular_intensity, uniform_shininess);
+    model.render_model();
+
+}
+
+void directional_shadow_map_pass(DirectionalLight* d_light) {
+
+    directional_shadow_shader.use_shader();
+
+    glViewport(0,0, d_light->get_shadow_map()->get_shadow_width(), d_light->get_shadow_map()->get_shadow_height());
+
+    d_light->get_shadow_map()->write();
+    glClear(GL_DEPTH_BUFFER_BIT);
+
+    uniform_model = directional_shadow_shader.get_model_location();
+    glm::mat4 l_traf = d_light->calculate_light_transform();
+    directional_shadow_shader.set_directional_light_transform(&l_traf);
+
+    render_scene();
+
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
+void render_pass(glm::mat4 projection_matrix, glm::mat4 view_matrix) {
+
+    shader_list[0].use_shader();
+
+    uniform_model = shader_list[0].get_model_location();
+    uniform_projection = shader_list[0].get_projection_location();
+    uniform_view = shader_list[0].get_view_location();
+
+    uniform_eye_position = shader_list[0].get_eye_position_location();
+    uniform_specular_intensity = shader_list[0].get_specular_intensity_location();
+    uniform_shininess = shader_list[0].get_shininess_location();
+
+    glViewport(0,0, 1024, 768);
+
+    // clear window
+    glClearColor(0.f, 0.f, 0.f, 1.f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    glUniformMatrix4fv(uniform_projection, 1, GL_FALSE, glm::value_ptr(projection_matrix));
+    glUniformMatrix4fv(uniform_view, 1, GL_FALSE, glm::value_ptr(view_matrix));
+    glUniform3f(uniform_eye_position, camera.get_camera_position().x, camera.get_camera_position().y, camera.get_camera_position().z);
+
+    shader_list[0].set_directional_light(&main_light);
+    shader_list[0].set_point_lights(point_lights, point_light_count);
+    shader_list[0].set_spot_lights(spot_lights, spot_light_count);
+    
+    glm::mat4 l_traf = main_light.calculate_light_transform();
+    shader_list[0].set_directional_light_transform(&l_traf);
+
+    main_light.get_shadow_map()->read(GL_TEXTURE1);
+    shader_list[0].set_texture(0);
+    shader_list[0].set_directional_shadow_map(1);
+
+    glm::vec3 lower_light = camera.get_camera_position();
+    lower_light.y -= 0.3f;
+    // spot_lights[0].set_flash(lower_light, camera.get_camera_direction());
+
+    render_scene();
 }
 
 int main()
@@ -179,14 +282,13 @@ int main()
     shiny_material = Material(4.0f, 256);
     dull_material = Material(0.3f, 4);
 
-    house = Model();
-    house.load_model("Models/Big_Old_House.obj");
+    model = Model();
+    model.load_model("Models/E_45_Aircraft_obj.obj");
 
-    main_light = DirectionalLight(1.0f, 1.0f, 1.0f,
-                                                        0.1f, 0.1f,
-                                                        0.0f, 0.0f, -1.0f);
-
-    unsigned int point_light_count = 0;
+    main_light = DirectionalLight(1024, 1024, 
+                                                       1.0f, 1.0f, 1.0f,
+                                                        0.1f, 0.6f,
+                                                        0.0f, -7.0f, -1.0f);
 
     point_lights[0] = PointLight(0.0f, 0.0f, 1.0f,
                                                     0.0f, 1.0f,
@@ -203,9 +305,9 @@ int main()
 
     //point_light_count++;
 
-    unsigned int spot_light_count = 0;
 
-    spot_lights[0] = SpotLight(1.0f, 1.0f, 1.0f,
+    spot_lights[0] = SpotLight(1024, 1024, 
+                                                    1.0f, 1.0f, 1.0f,
                                                     1.0f, 2.0f,
                                                     0.0f, 0.0f, 0.0f,
                                                     0.0f, -1.0f, 0.0f,
@@ -214,7 +316,8 @@ int main()
 
     spot_light_count++;
 
-    spot_lights[1] = SpotLight(1.0f, 1.0f, 1.0f,
+    spot_lights[1] = SpotLight(1024, 1024, 
+                                                    1.0f, 1.0f, 1.0f,
                                                     0.0f, 1.0f,
                                                     0.0f, -1.5f, 0.0f,
                                                     -100.0f, -1.0f, 0.0f,
@@ -222,9 +325,6 @@ int main()
                                                     20.0f);
 
     spot_light_count++;
-
-    GLuint uniform_projection = 0, uniform_model = 0, uniform_view = 0, uniform_eye_position = 0,
-                 uniform_specular_intensity = 0, uniform_shininess = 0;
 
     glm::mat4 projection = glm::perspective(45.f, main_window.get_buffer_width()/main_window.get_buffer_height(), 0.1f, 100.f);
 
@@ -243,61 +343,8 @@ int main()
         camera.key_control(main_window.get_keys(), delta_time);
         camera.mouse_control(main_window.get_x_change(), main_window.get_y_change());
 
-        // clear window
-        glClearColor(0.f, 0.f, 0.f, 1.f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-        shader_list[0].use_shader();
-        uniform_model = shader_list[0].get_model_location();
-        uniform_projection = shader_list[0].get_projection_location();
-        uniform_view = shader_list[0].get_view_location();
-        
-        uniform_eye_position = shader_list[0].get_eye_position_location();
-        uniform_specular_intensity = shader_list[0].get_specular_intensity_location();
-        uniform_shininess = shader_list[0].get_shininess_location();
-
-        glm::vec3 lower_light = camera.get_camera_position();
-        lower_light.y -= 0.3f;
-        spot_lights[0].set_flash(lower_light, camera.get_camera_direction());
-        
-        shader_list[0].set_directional_light(&main_light);
-        shader_list[0].set_point_lights(point_lights, point_light_count);
-        shader_list[0].set_spot_lights(spot_lights, spot_light_count);
-        
-        glUniformMatrix4fv(uniform_projection, 1, GL_FALSE, glm::value_ptr(projection));
-        glUniformMatrix4fv(uniform_view, 1, GL_FALSE, glm::value_ptr(camera.calculate_viewmatrix()));
-        glUniform3f(uniform_eye_position, camera.get_camera_position().x, camera.get_camera_position().y, camera.get_camera_position().z);
-
-        glm::mat4 model(1.0f);
-        model = glm::translate(model, glm::vec3(0.0f, 0.0f, -2.5f));
-        //model = glm::scale(model, glm::vec3(0.4f, 0.4f, 1.0f));
-        glUniformMatrix4fv(uniform_model, 1, GL_FALSE, glm::value_ptr(model));
-        ornament1.use_texture();
-        shiny_material.use_material(uniform_specular_intensity, uniform_shininess);
-        mesh_list[0]->render_mesh();
-
-        model = glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(0.0f, 4.0f, -2.5f));
-        //model = glm::scale(model, glm::vec3(0.4f, 0.4f, 1.0f));
-        glUniformMatrix4fv(uniform_model, 1, GL_FALSE, glm::value_ptr(model));
-        ornament2.use_texture();
-        dull_material.use_material(uniform_specular_intensity, uniform_shininess);
-        mesh_list[1]->render_mesh();
-
-        model = glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(0.0f, -2.0f, 0.0f));
-        //model = glm::scale(model, glm::vec3(0.4f, 0.4f, 1.0f));
-        glUniformMatrix4fv(uniform_model, 1, GL_FALSE, glm::value_ptr(model));
-        ornament2.use_texture();
-        shiny_material.use_material(uniform_specular_intensity, uniform_shininess);
-        mesh_list[2]->render_mesh();
-
-        model = glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(0.0f, -2.0f, 0.0f));
-        //model = glm::scale(model, glm::vec3(0.4f, 0.4f, 1.0f));
-        glUniformMatrix4fv(uniform_model, 1, GL_FALSE, glm::value_ptr(model));
-        shiny_material.use_material(uniform_specular_intensity, uniform_shininess);
-        house.render_model();
+        directional_shadow_map_pass(&main_light);
+        render_pass(projection, camera.calculate_viewmatrix());
 
         glUseProgram(0);
 

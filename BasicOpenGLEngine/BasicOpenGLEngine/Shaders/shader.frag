@@ -67,9 +67,18 @@ uniform Material material;
 
 uniform vec3 eye_position;
 
+float calc_directional_shadow_factor(DirectionalLight d_light) {
+    
+    vec3 proj_coords = directional_light_space_pos.xyz / directional_light_space_pos.w;
+    proj_coords = (proj_coords * 0.5f) + 0.5f;
+    float closest_depth = texture(directional_shadow_map, proj_coords.xy).r;
+    float current_depth = proj_coords.z;
+    float shadow = current_depth > closest_depth ? 1.0f : 0.0f;
+    return shadow;
 
+}
 
-vec4 calc_light_by_direction(Light light, vec3 direction) {
+vec4 calc_light_by_direction(Light light, vec3 direction, float shadow_factor) {
     
     vec4 ambient_color = vec4(light.color, 1.0f) * light.ambient_intensity;
     float diffuse_factor = max(dot(normalize(normal), normalize(direction)), 0.0f);
@@ -91,14 +100,15 @@ vec4 calc_light_by_direction(Light light, vec3 direction) {
         }
     }
 
-    return  (ambient_color + diffuse_color + specular_color);
+    return  (ambient_color + (1.f - shadow_factor) * (diffuse_color + specular_color));
 
 }
 
 
 vec4 calc_directional_light() {
-
-    return calc_light_by_direction(directional_light.base, directional_light.direction);
+    
+    float shadow_factor = calc_directional_shadow_factor(directional_light);
+    return calc_light_by_direction(directional_light.base, directional_light.direction, shadow_factor);
 
 }
 
@@ -109,7 +119,7 @@ vec4 calc_point_light(PointLight p_light) {
     float distance = length(direction);
     direction = normalize(direction);
 
-    vec4 color = calc_light_by_direction(p_light.base, direction);
+    vec4 color = calc_light_by_direction(p_light.base, direction, 1.0f);
     float attentuation = p_light.exponent * pow(distance,2) 
                                     +  p_light.linear        * distance
                                     +  p_light.constant;

@@ -10,5 +10,4 @@ void main() {
 
 	gl_Position = directional_light_transform * model * vec4(pos, 1.0f);
 
-
 }

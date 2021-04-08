@@ -73,7 +73,30 @@ float calc_directional_shadow_factor(DirectionalLight d_light) {
     proj_coords = (proj_coords * 0.5f) + 0.5f;
     float closest_depth = texture(directional_shadow_map, proj_coords.xy).r;
     float current_depth = proj_coords.z;
-    float shadow = current_depth > closest_depth ? 1.0f : 0.0f;
+
+    vec3 normalized_normal = normalize(normal);
+    vec3 light_dir = normalize(d_light.direction);
+
+    float bias = max(0.5f * (1.f - dot(normalized_normal, light_dir)), 0.005f);
+
+    //PCF
+    float shadow = 0.0f;
+    vec2 texel_size = 1.0f / textureSize(directional_shadow_map, 0);
+
+    for(int x = -2; x <= 2; x++) {
+        for(int y = -2; y <= 2; y++) {
+            float closest_depth_neighbor = texture(directional_shadow_map, proj_coords.xy + vec2(x,y) * texel_size).r;
+            shadow += current_depth > closest_depth_neighbor + bias  ? 1.0f : 0.0f;
+        }
+    }
+    shadow /= 25.f;
+
+    //float shadow = current_depth > closest_depth + bias  ? 1.0f : 0.0f;
+
+    if(proj_coords.z > 1.0) {
+        shadow = 0.0f;
+    }
+
     return shadow;
 
 }

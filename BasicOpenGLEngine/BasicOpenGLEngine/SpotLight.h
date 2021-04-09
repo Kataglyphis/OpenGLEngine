@@ -8,7 +8,8 @@ public:
 
     SpotLight();
 
-    SpotLight(GLfloat shadow_width, GLfloat shadow_height, 
+    SpotLight(GLfloat shadow_width, GLfloat shadow_height,
+                      GLfloat near, GLfloat far,
                       GLfloat red, GLfloat green, GLfloat blue,
                       GLfloat a_intensity, GLfloat d_intensity,
                       GLfloat x_pos, GLfloat y_pos, GLfloat z_pos,

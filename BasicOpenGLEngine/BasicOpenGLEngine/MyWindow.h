@@ -13,8 +13,8 @@ public:
 
 	int initialize();
 
-	GLfloat get_buffer_width() { return buffer_width; }
-	GLfloat get_buffer_height() { return buffer_height; }
+	GLfloat get_buffer_width() { return (GLfloat)buffer_width; }
+	GLfloat get_buffer_height() { return (GLfloat)buffer_height; }
 
 	bool get_should_close() { return glfwWindowShouldClose(main_window); }
 

@@ -8,10 +8,12 @@ PointLight::PointLight()
     exponent = 0.0f;
 }
 
-PointLight::PointLight(GLfloat red, GLfloat green, GLfloat blue,
+PointLight::PointLight(GLuint shadow_width, GLuint shadow_height,
+                                        GLfloat near, GLfloat far, 
+                                        GLfloat red, GLfloat green, GLfloat blue,
                                         GLfloat a_intensity, GLfloat d_intensity,
                                         GLfloat x_pos, GLfloat y_pos, GLfloat z_pos, 
-                                        GLfloat con, GLfloat lin, GLfloat exp) : Light(1024,1024,
+                                        GLfloat con, GLfloat lin, GLfloat exp) : Light(shadow_width,shadow_height,
                                                                                                                         red, green, blue,
                                                                                                                         a_intensity, d_intensity)
 {
@@ -19,6 +21,13 @@ PointLight::PointLight(GLfloat red, GLfloat green, GLfloat blue,
     constant = con;
     linear = lin;
     exponent = exp;
+    far_plane = far;
+
+    float aspect = (float)shadow_width / (float)shadow_height;
+    light_proj = glm::perspective(glm::radians(90.0f), aspect, near, far);
+
+    shadow_map = new OmniShadowMap();
+    shadow_map->init(shadow_width, shadow_height);
 }
 
 void PointLight::use_light(GLuint ambient_intensity_location, GLuint ambient_color_location,
@@ -36,6 +45,36 @@ void PointLight::use_light(GLuint ambient_intensity_location, GLuint ambient_col
     glUniform1f(linear_location, linear);
     glUniform1f(exponent_location, exponent);
 
+}
+
+std::vector<glm::mat4> PointLight::calculate_light_transform()
+{
+    std::vector<glm::mat4> light_matrices;
+    //make sure all light matrices align with the order we were defining in OmniShadowMap
+    //GL_TEXTURE_CUBE_MAP_POSITIVE_X+i; therefoe start off with glm::vec3(1.0, 0.0,0.0)
+    //+x,-x
+    light_matrices.push_back(light_proj * glm::lookAt(position, position + glm::vec3(1.0, 0.0,0.0), glm::vec3(0.0, -1.0, 0.0)));
+    light_matrices.push_back(light_proj * glm::lookAt(position, position + glm::vec3(-1.0, 0.0, 0.0), glm::vec3(0.0, -1.0, 0.0)));
+
+    //+y,-y
+    light_matrices.push_back(light_proj * glm::lookAt(position, position + glm::vec3(0.0, 1.0, 0.0), glm::vec3(0.0, 0.0, 1.0)));
+    light_matrices.push_back(light_proj * glm::lookAt(position, position + glm::vec3(0.0, -1.0, 0.0), glm::vec3(0.0, 0.0, -1.0)));
+
+    //+z,-z
+    light_matrices.push_back(light_proj * glm::lookAt(position, position + glm::vec3(0.0, 0.0, 1.0), glm::vec3(0.0, -1.0, 0.0)));
+    light_matrices.push_back(light_proj * glm::lookAt(position, position + glm::vec3(0.0, 0.0, -1.0), glm::vec3(0.0, -1.0, 0.0)));
+
+    return light_matrices;
+}
+
+GLfloat PointLight::get_far_plane()
+{
+    return far_plane;
+}
+
+glm::vec3 PointLight::get_position()
+{
+    return position;
 }
 
 PointLight::~PointLight()

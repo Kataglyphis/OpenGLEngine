@@ -129,16 +129,16 @@ void MyWindow::handle_mouse(GLFWwindow* window, double x_pos, double y_pos) {
     MyWindow* the_window = static_cast<MyWindow*>(glfwGetWindowUserPointer(window));
 
     if (the_window->mouse_first_moved) {
-        the_window->last_x = x_pos;
-        the_window->last_y = y_pos;
+        the_window->last_x = (float)x_pos;
+        the_window->last_y = (float)y_pos;
         the_window->mouse_first_moved = false;
     }
 
-    the_window->x_change = x_pos - the_window->last_x;
-    the_window->y_change = the_window->last_y - y_pos;
+    the_window->x_change = (float)(x_pos - the_window->last_x);
+    the_window->y_change = (float)(the_window->last_y - y_pos);
 
-    the_window->last_x = x_pos;
-    the_window->last_y = y_pos;
+    the_window->last_x = (float)x_pos;
+    the_window->last_y = (float)y_pos;
 
     //printf("x:%.6f,  y:%.6f\n", the_window->x_change, the_window->y_change);
 }

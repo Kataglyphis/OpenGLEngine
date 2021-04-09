@@ -22,6 +22,7 @@ public:
 
 	void create_from_string(const char* vertex_code, const char* fragment_code);
 	void create_from_files(const char* vertex_location, const char* fragment_location);
+	void create_from_files(const char* vertex_location, const char* geometry_location, const char* fragment_location);
 
 	std::string read_file(const char* file_location);
 
@@ -35,6 +36,8 @@ public:
 	GLuint get_specular_intensity_location();
 	GLuint get_shininess_location();
 	GLuint get_eye_position_location();
+	GLuint get_omni_light_pos_location();
+	GLuint get_far_plane_location();
 
 	void set_directional_light(DirectionalLight* d_light);
 	void set_point_lights(PointLight* p_light, unsigned int light_count);
@@ -42,6 +45,8 @@ public:
 	void set_texture(GLuint texture_unit);
 	void set_directional_shadow_map(GLuint texture_unit);
 	void set_directional_light_transform(glm::mat4 * light_transform);
+	void set_light_matrices(std::vector<glm::mat4> light_matrices);
+
 
 	void use_shader();
 	void clear_shader();
@@ -55,7 +60,10 @@ private:
 	GLuint shader_id, uniform_model, uniform_view, uniform_projection, uniform_eye_position,
 				uniform_specular_intensity, uniform_shininess,
 				uniform_texture,
-			    uniform_directional_light_transform, uniform_directional_shadow_map;
+			    uniform_directional_light_transform, uniform_directional_shadow_map, 
+				uniform_omni_light_pos, uniform_far_plane;
+
+	GLuint uniform_light_matrices[6];
 
 	struct {
 		GLuint uniform_color;
@@ -96,5 +104,8 @@ private:
 
 	void add_shader(GLuint program, const char* shader_code, GLenum shader_type);
 	void compile_shader(const char* vertex_code, const char* fragment_code);
+	void compile_shader(const char* vertex_code, const char* geometry_code, const char* fragment_code);
+
+	void compile_program();
 };
 

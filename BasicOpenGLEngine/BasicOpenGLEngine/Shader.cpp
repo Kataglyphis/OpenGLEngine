@@ -93,11 +93,26 @@ void Shader::compile_shader(const char* vertex_code, const char* geometry_code, 
     compile_program();
 }
 
-void Shader::compile_program()
+void Shader::validate()
 {
 
     GLint result = 0;
+    GLchar eLog[1024] = { 0 };
 
+    glValidateProgram(shader_id);
+
+    glGetProgramiv(shader_id, GL_VALIDATE_STATUS, &result);
+
+    if (!result) {
+        glGetProgramInfoLog(shader_id, sizeof(eLog), NULL, eLog);
+        printf("Error validating program: '%s'\n", eLog);
+        return;
+    }
+}
+
+void Shader::compile_program()
+{
+    GLint result = 0;
     GLchar eLog[1024] = { 0 };
 
     glLinkProgram(shader_id);
@@ -109,15 +124,7 @@ void Shader::compile_program()
         return;
     }
 
-    glValidateProgram(shader_id);
-
-    glGetProgramiv(shader_id, GL_VALIDATE_STATUS, &result);
-
-    if (!result) {
-        glGetProgramInfoLog(shader_id, sizeof(eLog), NULL, eLog);
-        printf("Error validating program: '%s'\n", eLog);
-        return;
-    }
+    
 
     uniform_model = glGetUniformLocation(shader_id, "model");
     uniform_projection = glGetUniformLocation(shader_id, "projection");
@@ -207,6 +214,17 @@ void Shader::compile_program()
 
     }
 
+    for (size_t i = 0; i < MAX_POINT_LIGHTS + MAX_SPOT_LIGHTS; i++) {
+
+        char loc_buff[100] = { '\0' };
+        snprintf(loc_buff, sizeof(loc_buff), "omni_shadow_maps[%zd].shadow_map", i);
+        uniform_omni_shadow_map[i].shadow_map = glGetUniformLocation(shader_id, loc_buff);
+
+        snprintf(loc_buff, sizeof(loc_buff), "omni_shadow_maps[%zd].far_plane", i);
+        uniform_omni_shadow_map[i].far_plane = glGetUniformLocation(shader_id, loc_buff);
+        
+    }
+
 }
 
 GLuint Shader::get_projection_location() {
@@ -278,7 +296,7 @@ void Shader::set_directional_light(DirectionalLight* d_light)
 
 }
 
-void Shader::set_point_lights(PointLight* p_light, unsigned int light_count)
+void Shader::set_point_lights(PointLight* p_light, unsigned int light_count, unsigned int texture_unit, unsigned int offset)
 {
 
     if (light_count > MAX_POINT_LIGHTS) {
@@ -292,11 +310,16 @@ void Shader::set_point_lights(PointLight* p_light, unsigned int light_count)
         p_light[i].use_light(uniform_point_light[i].uniform_ambient_intensity, uniform_point_light[i].uniform_color, 
             uniform_point_light[i].uniform_diffuse_intensity, uniform_point_light[i].uniform_position, 
             uniform_point_light[i].uniform_constant, uniform_point_light[i].uniform_linear, uniform_point_light[i].uniform_exponent);
+
+        p_light[i].get_shadow_map()->read(GL_TEXTURE0 + texture_unit + i);
+        glUniform1i(uniform_omni_shadow_map[i + offset].shadow_map, texture_unit + i);
+        glUniform1i(uniform_omni_shadow_map[i + offset].far_plane, p_light[i].get_far_plane());
+
     }
 
 }
 
-void Shader::set_spot_lights(SpotLight* s_light, unsigned int light_count)
+void Shader::set_spot_lights(SpotLight* s_light, unsigned int light_count, unsigned int texture_unit, unsigned int offset)
 {
 
     if (light_count > MAX_SPOT_LIGHTS) {
@@ -311,6 +334,10 @@ void Shader::set_spot_lights(SpotLight* s_light, unsigned int light_count)
             uniform_spot_light[i].uniform_diffuse_intensity, uniform_spot_light[i].uniform_position, uniform_spot_light[i].uniform_direction, 
             uniform_spot_light[i].uniform_constant, uniform_spot_light[i].uniform_linear, uniform_spot_light[i].uniform_exponent,
             uniform_spot_light[i].uniform_edge);
+
+        s_light[i].get_shadow_map()->read(GL_TEXTURE0 + texture_unit + i);
+        glUniform1i(uniform_omni_shadow_map[i + offset].shadow_map, texture_unit + i);
+        glUniform1i(uniform_omni_shadow_map[i + offset].far_plane, s_light[i].get_far_plane());
     }
 
 }

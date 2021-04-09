@@ -217,6 +217,8 @@ void directional_shadow_map_pass(DirectionalLight* d_light) {
     glm::mat4 l_traf = d_light->calculate_light_transform();
     directional_shadow_shader.set_directional_light_transform(&l_traf);
 
+    directional_shadow_shader.validate();
+
     render_scene();
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -238,6 +240,8 @@ void omni_shadowmap_pass(PointLight* p_light) {
     glUniform3f(uniform_omni_light_pos, p_light->get_position().x, p_light->get_position().y, p_light->get_position().z);
     glUniform1f(uniform_far_plane, p_light->get_far_plane());
     omni_shadow_shader.set_light_matrices(p_light->calculate_light_transform());
+
+    omni_shadow_shader.validate();
 
     render_scene();
 
@@ -268,8 +272,8 @@ void render_pass(glm::mat4 projection_matrix, glm::mat4 view_matrix) {
     glUniform3f(uniform_eye_position, camera.get_camera_position().x, camera.get_camera_position().y, camera.get_camera_position().z);
 
     shader_list[0].set_directional_light(&main_light);
-    shader_list[0].set_point_lights(point_lights, point_light_count);
-    shader_list[0].set_spot_lights(spot_lights, spot_light_count);
+    shader_list[0].set_point_lights(point_lights, point_light_count, 2, 0);
+    shader_list[0].set_spot_lights(spot_lights, spot_light_count, 2 + point_light_count, point_light_count);
     
     glm::mat4 l_traf = main_light.calculate_light_transform();
     shader_list[0].set_directional_light_transform(&l_traf);
@@ -281,6 +285,8 @@ void render_pass(glm::mat4 projection_matrix, glm::mat4 view_matrix) {
     glm::vec3 lower_light = camera.get_camera_position();
     lower_light.y -= 0.3f;
     // spot_lights[0].set_flash(lower_light, camera.get_camera_direction());
+
+    shader_list[0].validate();
 
     render_scene();
 }

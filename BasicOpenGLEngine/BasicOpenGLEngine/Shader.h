@@ -24,6 +24,8 @@ public:
 	void create_from_files(const char* vertex_location, const char* fragment_location);
 	void create_from_files(const char* vertex_location, const char* geometry_location, const char* fragment_location);
 
+	void validate();
+
 	std::string read_file(const char* file_location);
 
 	GLuint get_projection_location();
@@ -40,8 +42,8 @@ public:
 	GLuint get_far_plane_location();
 
 	void set_directional_light(DirectionalLight* d_light);
-	void set_point_lights(PointLight* p_light, unsigned int light_count);
-	void set_spot_lights(SpotLight* s_light, unsigned int light_count);
+	void set_point_lights(PointLight* p_light, unsigned int light_count, unsigned int texture_unit, unsigned int offset);
+	void set_spot_lights(SpotLight* s_light, unsigned int light_count, unsigned int texture_unit, unsigned int offset);
 	void set_texture(GLuint texture_unit);
 	void set_directional_shadow_map(GLuint texture_unit);
 	void set_directional_light_transform(glm::mat4 * light_transform);
@@ -101,6 +103,11 @@ private:
 		GLuint uniform_direction;
 		GLuint uniform_edge;
 	} uniform_spot_light[MAX_SPOT_LIGHTS];
+
+	struct {
+		GLuint shadow_map;
+		GLuint far_plane;
+	} uniform_omni_shadow_map[MAX_POINT_LIGHTS + MAX_SPOT_LIGHTS];
 
 	void add_shader(GLuint program, const char* shader_code, GLenum shader_type);
 	void compile_shader(const char* vertex_code, const char* fragment_code);

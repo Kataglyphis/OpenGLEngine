@@ -47,7 +47,7 @@ struct SpotLight {
 
 struct OmniShadowMap {
 
-    samplerCube shadowMap;
+    samplerCube shadow_map;
     float far_plane;
 
 };
@@ -112,13 +112,13 @@ float calc_directional_shadow_factor(DirectionalLight d_light) {
 float calc_omni_shadow_factor(PointLight p_light, int shadow_index) {
     
     vec3 frag_to_light = frag_pos - p_light.position;
-    float closest_depth = texture(omni_shadow_maps[shadow_index].shadowMap, frag_to_light).r;
+    float closest_depth = texture(omni_shadow_maps[shadow_index].shadow_map, frag_to_light).r;
     //undo our division through the far plane in the earlier shader stage;
     closest_depth *= omni_shadow_maps[shadow_index].far_plane;
     float current_depth = length(frag_to_light);
     float bias = 0.05f;
     float shadow = current_depth - bias > closest_depth ? 1.0f : 0.0f;
-    return 0;
+    return shadow;
 
 }
 

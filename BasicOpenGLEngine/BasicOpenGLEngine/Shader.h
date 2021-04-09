@@ -105,8 +105,8 @@ private:
 	} uniform_spot_light[MAX_SPOT_LIGHTS];
 
 	struct {
-		GLuint shadow_map;
-		GLuint far_plane;
+		GLuint uniform_shadow_map;
+		GLuint uniform_far_plane;
 	} uniform_omni_shadow_map[MAX_POINT_LIGHTS + MAX_SPOT_LIGHTS];
 
 	void add_shader(GLuint program, const char* shader_code, GLenum shader_type);

@@ -218,10 +218,10 @@ void Shader::compile_program()
 
         char loc_buff[100] = { '\0' };
         snprintf(loc_buff, sizeof(loc_buff), "omni_shadow_maps[%zd].shadow_map", i);
-        uniform_omni_shadow_map[i].shadow_map = glGetUniformLocation(shader_id, loc_buff);
+        uniform_omni_shadow_map[i].uniform_shadow_map = glGetUniformLocation(shader_id, loc_buff);
 
         snprintf(loc_buff, sizeof(loc_buff), "omni_shadow_maps[%zd].far_plane", i);
-        uniform_omni_shadow_map[i].far_plane = glGetUniformLocation(shader_id, loc_buff);
+        uniform_omni_shadow_map[i].uniform_far_plane = glGetUniformLocation(shader_id, loc_buff);
         
     }
 
@@ -312,8 +312,8 @@ void Shader::set_point_lights(PointLight* p_light, unsigned int light_count, uns
             uniform_point_light[i].uniform_constant, uniform_point_light[i].uniform_linear, uniform_point_light[i].uniform_exponent);
 
         p_light[i].get_shadow_map()->read(GL_TEXTURE0 + texture_unit + i);
-        glUniform1i(uniform_omni_shadow_map[i + offset].shadow_map, texture_unit + i);
-        glUniform1i(uniform_omni_shadow_map[i + offset].far_plane, p_light[i].get_far_plane());
+        glUniform1i(uniform_omni_shadow_map[i + offset].uniform_shadow_map, texture_unit + i);
+        glUniform1f(uniform_omni_shadow_map[i + offset].uniform_far_plane, p_light[i].get_far_plane());
 
     }
 
@@ -336,8 +336,8 @@ void Shader::set_spot_lights(SpotLight* s_light, unsigned int light_count, unsig
             uniform_spot_light[i].uniform_edge);
 
         s_light[i].get_shadow_map()->read(GL_TEXTURE0 + texture_unit + i);
-        glUniform1i(uniform_omni_shadow_map[i + offset].shadow_map, texture_unit + i);
-        glUniform1i(uniform_omni_shadow_map[i + offset].far_plane, s_light[i].get_far_plane());
+        glUniform1i(uniform_omni_shadow_map[i + offset].uniform_shadow_map, texture_unit + i);
+        glUniform1f(uniform_omni_shadow_map[i + offset].uniform_far_plane, s_light[i].get_far_plane());
     }
 
 }

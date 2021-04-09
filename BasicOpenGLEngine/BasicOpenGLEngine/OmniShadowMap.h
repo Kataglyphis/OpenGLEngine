@@ -6,7 +6,7 @@ class OmniShadowMap :
 public:
     OmniShadowMap();
 
-    virtual bool init(GLuint width, GLuint height);
+    bool init(GLuint width, GLuint height);
 
     void write();
 

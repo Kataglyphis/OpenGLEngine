@@ -8,6 +8,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <vector>
+#include <cmath>
 
 
 #include <GL/glew.h>
@@ -164,6 +165,7 @@ void create_shaders() {
     shader_list.push_back(*shader1);
 
     directional_shadow_shader = Shader();
+    omni_shadow_shader = Shader();
     directional_shadow_shader.create_from_files("Shaders/directional_shadow_map.vert", "Shaders/directional_shadow_map.frag");
     omni_shadow_shader.create_from_files("Shaders/omni_shadow_map.vert", "Shaders/omni_shadow_map.geom", "Shaders/omni_shadow_map.frag");
 
@@ -196,7 +198,7 @@ void render_scene() {
     mesh_list[2]->render_mesh();
 
     model_matrix = glm::mat4(1.0f);
-    model_matrix = glm::translate(model_matrix, glm::vec3(0.0f, 5.0f, 0.0f));
+    model_matrix = glm::translate(model_matrix, glm::vec3(0.0f, 1.0f, 0.0f));
     //model = glm::scale(model, glm::vec3(0.4f, 0.4f, 1.0f));
     glUniformMatrix4fv(uniform_model, 1, GL_FALSE, glm::value_ptr(model_matrix));
     shiny_material.use_material(uniform_specular_intensity, uniform_shininess);
@@ -237,6 +239,7 @@ void omni_shadowmap_pass(PointLight* p_light) {
     uniform_omni_light_pos = omni_shadow_shader.get_omni_light_pos_location();
     uniform_far_plane = omni_shadow_shader.get_far_plane_location();
 
+
     glUniform3f(uniform_omni_light_pos, p_light->get_position().x, p_light->get_position().y, p_light->get_position().z);
     glUniform1f(uniform_far_plane, p_light->get_far_plane());
     omni_shadow_shader.set_light_matrices(p_light->calculate_light_transform());
@@ -272,19 +275,19 @@ void render_pass(glm::mat4 projection_matrix, glm::mat4 view_matrix) {
     glUniform3f(uniform_eye_position, camera.get_camera_position().x, camera.get_camera_position().y, camera.get_camera_position().z);
 
     shader_list[0].set_directional_light(&main_light);
-    shader_list[0].set_point_lights(point_lights, point_light_count, 2, 0);
-    shader_list[0].set_spot_lights(spot_lights, spot_light_count, 2 + point_light_count, point_light_count);
+    shader_list[0].set_point_lights(point_lights, point_light_count, 3, 0);
+    shader_list[0].set_spot_lights(spot_lights, spot_light_count, 3 + point_light_count, point_light_count);
     
     glm::mat4 l_traf = main_light.calculate_light_transform();
     shader_list[0].set_directional_light_transform(&l_traf);
 
     main_light.get_shadow_map()->read(GL_TEXTURE1);
-    shader_list[0].set_texture(0);
-    shader_list[0].set_directional_shadow_map(1);
+    shader_list[0].set_texture(1);
+    shader_list[0].set_directional_shadow_map(2);
 
     glm::vec3 lower_light = camera.get_camera_position();
     lower_light.y -= 0.3f;
-    // spot_lights[0].set_flash(lower_light, camera.get_camera_direction());
+    //spot_lights[0].set_flash(lower_light, camera.get_camera_direction());
 
     shader_list[0].validate();
 
@@ -321,17 +324,17 @@ int main()
     model = Model();
     model.load_model("Models/E_45_Aircraft_obj.obj");
 
-    main_light = DirectionalLight(1024, 1024, 
+    main_light = DirectionalLight(2048, 2048, 
                                                        1.0f, 1.0f, 1.0f,
-                                                        0.1f, 0.6f,
-                                                        0.0f, -7.0f, -1.0f);
+                                                        0.0f, 0.0f,
+                                                        0.0f, -15.0f, -10.0f);
 
     point_lights[0] = PointLight(1024, 1024, 
                                                     0.01f, 100.f,
                                                     0.0f, 0.0f, 1.0f,
                                                     0.0f, 1.0f,
-                                                    0.0f, 0.0f, 0.0f,
-                                                    0.3f, 0.2f, 0.1f);
+                                                    1.0f, 2.0f, 0.0f,
+                                                    0.3f, 0.1f, 0.1f);
 
     point_light_count++;
 
@@ -339,8 +342,8 @@ int main()
     point_lights[1] = PointLight(1024, 1024, 
                                                     0.01f, 100.f,
                                                     0.0f, 1.0f, 0.0f,
-                                                    0.0f, 0.1f,
-                                                    -4.0f, 2.0f, 0.0f,
+                                                    0.0f, 1.0f,
+                                                    -4.0f, 3.0f, 0.0f,
                                                     0.3f, 0.1f, 0.1f);
 
     point_light_count++;
@@ -355,7 +358,7 @@ int main()
                                                     1.0f, 0.0f, 0.0f,
                                                     20.0f);
 
-    spot_light_count++;
+    //spot_light_count++;
 
     spot_lights[1] = SpotLight(1024, 1024, 
                                                     0.01f, 100.f,
@@ -366,7 +369,7 @@ int main()
                                                     1.0f, 0.0f, 0.0f,
                                                     20.0f);
 
-    spot_light_count++;
+    //spot_light_count++;
 
     glm::mat4 projection = glm::perspective(glm::radians(60.0f), main_window.get_buffer_width()/main_window.get_buffer_height(), 0.1f, 100.f);
 

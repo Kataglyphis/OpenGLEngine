@@ -22,7 +22,7 @@ Texture::Texture(const char* file_loc) {
 
 void Texture::use_texture() {
 
-	glActiveTexture(GL_TEXTURE0);
+	glActiveTexture(GL_TEXTURE1);
 	glBindTexture(GL_TEXTURE_2D, textureID);
 
 }

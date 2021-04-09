@@ -360,7 +360,8 @@ FodyWeavers.xsd
 
 
 #All personal folders/files
-ExternalLibs/
+# external libs now added with git large file system :)
+# ExternalLibs/
 # Added them with glfs :)
 # BasicOpenGLEngine/BasicOpenGLEngine/Models/
 # BasicOpenGLEngine/BasicOpenGLEngine/Textures/

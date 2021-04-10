@@ -70,7 +70,7 @@ Skybox::Skybox(std::vector<std::string> face_locations)
 		1.0f, 1.0f, 1.0f,			0.0f, 0.0f,			0.0f,0.0f,0.0f,
 		-1.0f, -1.0f, 1.0f,			0.0f, 0.0f,			0.0f,0.0f,0.0f,
 		1.0f, -1.0f, 1.0f,			0.0f, 0.0f,			0.0f,0.0f,0.0f
-	}
+	};
 }
 
 void Skybox::draw_skybox(glm::mat4 view_matrix, glm::mat4 projection_matrix)

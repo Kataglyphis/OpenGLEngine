@@ -311,8 +311,8 @@ void Shader::set_point_lights(PointLight* p_light, unsigned int light_count, uns
             uniform_point_light[i].uniform_diffuse_intensity, uniform_point_light[i].uniform_position, 
             uniform_point_light[i].uniform_constant, uniform_point_light[i].uniform_linear, uniform_point_light[i].uniform_exponent);
 
-        p_light[i].get_shadow_map()->read(GL_TEXTURE0 + texture_unit + i);
-        glUniform1i(uniform_omni_shadow_map[i + offset].uniform_shadow_map, texture_unit + i);
+        p_light[i].get_shadow_map()->read((GLenum)(GL_TEXTURE0 + texture_unit + i));
+        glUniform1i(uniform_omni_shadow_map[i + offset].uniform_shadow_map, (GLint)(texture_unit + i));
         glUniform1f(uniform_omni_shadow_map[i + offset].uniform_far_plane, p_light[i].get_far_plane());
 
     }
@@ -335,8 +335,8 @@ void Shader::set_spot_lights(SpotLight* s_light, unsigned int light_count, unsig
             uniform_spot_light[i].uniform_constant, uniform_spot_light[i].uniform_linear, uniform_spot_light[i].uniform_exponent,
             uniform_spot_light[i].uniform_edge);
 
-        s_light[i].get_shadow_map()->read(GL_TEXTURE0 + texture_unit + i);
-        glUniform1i(uniform_omni_shadow_map[i + offset].uniform_shadow_map, texture_unit + i);
+        s_light[i].get_shadow_map()->read((GLenum)(GL_TEXTURE0 + texture_unit + i));
+        glUniform1i(uniform_omni_shadow_map[i + offset].uniform_shadow_map, (GLint)(texture_unit + i));
         glUniform1f(uniform_omni_shadow_map[i + offset].uniform_far_plane, s_light[i].get_far_plane());
     }
 
@@ -386,7 +386,7 @@ void Shader::add_shader(GLuint program, const char* shader_code, GLenum shader_t
     code[0] = shader_code;
 
     GLint code_length[1];
-    code_length[0] = strlen(shader_code);
+    code_length[0] = (GLint)strlen(shader_code);
 
     glShaderSource(shader, 1, code, code_length);
     glCompileShader(shader);

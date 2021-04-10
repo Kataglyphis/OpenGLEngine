@@ -11,7 +11,7 @@ void Model::load_model(const std::string& file_name)
 	const aiScene* scene = importer.ReadFile(file_name, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_GenSmoothNormals
 																				| aiProcess_JoinIdenticalVertices);
 	if (!scene) {
-		printf("Model (%s) failed to load: %s", file_name, (char*) importer.GetErrorString());
+		printf("Model (%s) failed to load: %s", file_name.c_str(), importer.GetErrorString());
 		return;
 	}
 
@@ -103,7 +103,7 @@ void Model::load_mesh(aiMesh* mesh, const aiScene* scene)
 	}
 
 	Mesh* new_mesh = new Mesh();
-	new_mesh->create_mesh(&vertices[0], &indices[0], vertices.size(), indices.size());
+	new_mesh->create_mesh(&vertices[0], &indices[0], (int)vertices.size(), (int)indices.size());
 	mesh_list.push_back(new_mesh);
 	mesh_to_tex.push_back(mesh->mMaterialIndex);
 }
@@ -122,7 +122,7 @@ void Model::load_materials(const aiScene* scene)
 		if (material->GetTextureCount(aiTextureType_DIFFUSE)) {
 			aiString path;
 			if (material->GetTexture(aiTextureType_DIFFUSE, 0, &path) == AI_SUCCESS) {
-				int index = std::string(path.data).rfind("\\");
+				int index = (int)(std::string(path.data).rfind("\\"));
 				std::string file_name = std::string(path.data).substr(index + 1);
 
 				std::string texture_path = std::string("Textures/") + file_name;
@@ -130,7 +130,7 @@ void Model::load_materials(const aiScene* scene)
 				texture_list[i] = new Texture(texture_path.c_str());
 
 				if (!texture_list[i]->load_texture()) {
-					printf("Failed to load texture at: %s\n", texture_path);
+					printf("Failed to load texture at: %s\n", texture_path.c_str());
 					delete texture_list[i];
 					texture_list[i] = nullptr;
 				}

@@ -2,9 +2,9 @@
 
 #include <GL\glew.h>
 
-#include "stb_image.h"
-
 #include <string.h>
+
+#include "GlobalValues.h"
 
 class Texture
 {

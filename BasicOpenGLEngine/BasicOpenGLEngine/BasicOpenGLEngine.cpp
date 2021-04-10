@@ -55,6 +55,8 @@ Material shiny_material;
 Material dull_material;
 
 Model model;
+Model lantern;
+glm::vec3 lantern_position = glm::vec3(1.0f, 2.0f, 0.0f);
 
 DirectionalLight main_light;
 PointLight point_lights[MAX_POINT_LIGHTS];
@@ -198,11 +200,18 @@ void render_scene() {
     mesh_list[2]->render_mesh();
 
     model_matrix = glm::mat4(1.0f);
-    model_matrix = glm::translate(model_matrix, glm::vec3(0.0f, 1.0f, 0.0f));
+    model_matrix = glm::translate(model_matrix, glm::vec3(0.f, 0.0f, -1.0f));
     //model = glm::scale(model, glm::vec3(0.4f, 0.4f, 1.0f));
     glUniformMatrix4fv(uniform_model, 1, GL_FALSE, glm::value_ptr(model_matrix));
     shiny_material.use_material(uniform_specular_intensity, uniform_shininess);
     model.render_model();
+
+    model_matrix = glm::mat4(1.0f);
+    model_matrix = glm::translate(model_matrix, lantern_position);
+    model_matrix = glm::scale(model_matrix, glm::vec3(0.1f));
+    glUniformMatrix4fv(uniform_model, 1, GL_FALSE, glm::value_ptr(model_matrix));
+    shiny_material.use_material(uniform_specular_intensity, uniform_shininess);
+    lantern.render_model();
 
 }
 
@@ -281,7 +290,7 @@ void render_pass(glm::mat4 projection_matrix, glm::mat4 view_matrix) {
     glm::mat4 l_traf = main_light.calculate_light_transform();
     shader_list[0].set_directional_light_transform(&l_traf);
 
-    main_light.get_shadow_map()->read(GL_TEXTURE1);
+    main_light.get_shadow_map()->read(GL_TEXTURE2);
     shader_list[0].set_texture(1);
     shader_list[0].set_directional_shadow_map(2);
 
@@ -324,16 +333,19 @@ int main()
     model = Model();
     model.load_model("Models/E_45_Aircraft_obj.obj");
 
+    lantern = Model();
+    lantern.load_model("Models/lamp.obj");
+
     main_light = DirectionalLight(2048, 2048, 
                                                        1.0f, 1.0f, 1.0f,
-                                                        0.0f, 0.0f,
-                                                        0.0f, -15.0f, -10.0f);
+                                                        0.1f, 0.1f,
+                                                        0.0f, -7.0f, -1.0f);
 
     point_lights[0] = PointLight(1024, 1024, 
                                                     0.01f, 100.f,
                                                     0.0f, 0.0f, 1.0f,
                                                     0.0f, 1.0f,
-                                                    1.0f, 2.0f, 0.0f,
+                                                    lantern_position.x, lantern_position.y, lantern_position.z,
                                                     0.3f, 0.1f, 0.1f);
 
     point_light_count++;

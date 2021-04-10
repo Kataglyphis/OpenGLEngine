@@ -75,6 +75,14 @@ uniform Material material;
 
 uniform vec3 eye_position;
 
+vec3 sample_offset_directions[20] = vec3[] (
+    vec3(1,1,1), vec3(1,-1,1), vec3(-1,-1,1), vec3(-1,1,1),
+    vec3(1,1,-1), vec3(1,-1,-1), vec3(-1,-1,-1), vec3(-1,1,-1),
+    vec3(1,1,0), vec3(1,-1,0), vec3(-1,-1,0), vec3(-1,1,0),
+    vec3(1,0,1), vec3(-1,0,1), vec3(1,0,-1), vec3(-1,0,-1),
+    vec3(0,1,1), vec3(0,-1,1), vec3(0,-1,-1), vec3(0,1,-1)
+);
+
 float calc_directional_shadow_factor(DirectionalLight d_light) {
     
     vec3 proj_coords = directional_light_space_pos.xyz / directional_light_space_pos.w;
@@ -112,12 +120,26 @@ float calc_directional_shadow_factor(DirectionalLight d_light) {
 float calc_omni_shadow_factor(PointLight p_light, int shadow_index) {
     
     vec3 frag_to_light = frag_pos - p_light.position;
-    float closest_depth = texture(omni_shadow_maps[shadow_index].shadow_map, frag_to_light).r;
-    //undo our division through the far plane in the earlier shader stage;
-    closest_depth *= omni_shadow_maps[shadow_index].far_plane;
     float current_depth = length(frag_to_light);
+
+    float shadow = 0.0f;
     float bias = 0.05f;
-    float shadow = current_depth - bias > closest_depth ? 1.0f : 0.0f;
+    int num_samples = 20;
+
+    float view_distance = length(eye_position - frag_pos);
+    float disk_radius = (1.0 + (view_distance/omni_shadow_maps[shadow_index].far_plane)) / 25.0;
+
+    //PCF
+    for(int i = 0; i < num_samples; i++) {
+        float closest_depth = texture(omni_shadow_maps[shadow_index].shadow_map, frag_to_light + sample_offset_directions[i] * disk_radius).r;
+                closest_depth *= omni_shadow_maps[shadow_index].far_plane;
+                if(current_depth - bias > closest_depth) {
+                    shadow += 1.0f;
+                }
+    }
+
+    shadow /= float(num_samples); 
+
     return shadow;
 
 }

@@ -26,7 +26,7 @@ Skybox::Skybox(std::vector<std::string> face_locations)
 			return;
 		}
 
-		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, texture_data);
+		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, texture_data);
 
 		stbi_image_free(texture_data);
 	}
@@ -62,7 +62,7 @@ Skybox::Skybox(std::vector<std::string> face_locations)
 
 	float skybox_vertices[] = {
 		-1.0f, 1.0f, -1.0f,			0.0f, 0.0f,			0.0f,0.0f,0.0f,
-		-1.0f, -1.0f, -1.0f,		0.0f, 0.0f,			0.0f,0.0f,0.0f,
+		-1.0f, -1.0f, -1.0f,		    0.0f, 0.0f,			0.0f,0.0f,0.0f,
 		1.0f, 1.0f, -1.0f,			0.0f, 0.0f,			0.0f,0.0f,0.0f,
 		1.0f, -1.0f, -1.0f,			0.0f, 0.0f,			0.0f,0.0f,0.0f,
 

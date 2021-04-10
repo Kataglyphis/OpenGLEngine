@@ -31,6 +31,8 @@
 
 #include "Model.h"
 
+#include "Skybox.h"
+
 const float to_radians = 3.14159265f / 180.f;
 
 GLuint uniform_projection = 0, uniform_model = 0, uniform_view = 0, uniform_eye_position = 0,
@@ -61,6 +63,8 @@ glm::vec3 lantern_position = glm::vec3(1.0f, 2.0f, 0.0f);
 DirectionalLight main_light;
 PointLight point_lights[MAX_POINT_LIGHTS];
 SpotLight spot_lights[MAX_SPOT_LIGHTS];
+
+Skybox skybox;
 
 unsigned int point_light_count = 0;
 unsigned int spot_light_count = 0;
@@ -263,6 +267,14 @@ void omni_shadowmap_pass(PointLight* p_light) {
 
 void render_pass(glm::mat4 projection_matrix, glm::mat4 view_matrix) {
 
+    glViewport(0,0, 1024, 768);
+
+    // clear window
+    glClearColor(0.f, 0.f, 0.f, 1.f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    skybox.draw_skybox(view_matrix, projection_matrix);
+
     shader_list[0].use_shader();
 
     uniform_model = shader_list[0].get_model_location();
@@ -273,11 +285,6 @@ void render_pass(glm::mat4 projection_matrix, glm::mat4 view_matrix) {
     uniform_specular_intensity = shader_list[0].get_specular_intensity_location();
     uniform_shininess = shader_list[0].get_shininess_location();
 
-    glViewport(0,0, 1024, 768);
-
-    // clear window
-    glClearColor(0.f, 0.f, 0.f, 1.f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glUniformMatrix4fv(uniform_projection, 1, GL_FALSE, glm::value_ptr(projection_matrix));
     glUniformMatrix4fv(uniform_view, 1, GL_FALSE, glm::value_ptr(view_matrix));
@@ -370,7 +377,7 @@ int main()
                                                     1.0f, 0.0f, 0.0f,
                                                     20.0f);
 
-    //spot_light_count++;
+    spot_light_count++;
 
     spot_lights[1] = SpotLight(1024, 1024, 
                                                     0.01f, 100.f,
@@ -381,7 +388,17 @@ int main()
                                                     1.0f, 0.0f, 0.0f,
                                                     20.0f);
 
-    //spot_light_count++;
+    spot_light_count++;
+
+    std::vector<std::string> skybox_faces;
+    skybox_faces.push_back("Textures/Skybox/DOOM2016/DOOM16RT.png");
+    skybox_faces.push_back("Textures/Skybox/DOOM2016/DOOM16LF.png");
+    skybox_faces.push_back("Textures/Skybox/DOOM2016/DOOM16UP.png");
+    skybox_faces.push_back("Textures/Skybox/DOOM2016/DOOM16DN.png");
+    skybox_faces.push_back("Textures/Skybox/DOOM2016/DOOM16FT.png");
+    skybox_faces.push_back("Textures/Skybox/DOOM2016/DOOM16BK.png");
+
+    skybox = Skybox(skybox_faces);
 
     glm::mat4 projection = glm::perspective(glm::radians(60.0f), main_window.get_buffer_width()/main_window.get_buffer_height(), 0.1f, 100.f);
 

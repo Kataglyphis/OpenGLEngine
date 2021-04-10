@@ -71,10 +71,31 @@ Skybox::Skybox(std::vector<std::string> face_locations)
 		-1.0f, -1.0f, 1.0f,			0.0f, 0.0f,			0.0f,0.0f,0.0f,
 		1.0f, -1.0f, 1.0f,			0.0f, 0.0f,			0.0f,0.0f,0.0f
 	};
+
+	sky_mesh = new Mesh();
+	sky_mesh->create_mesh(skybox_vertices, skybox_indices, 64, 36);
 }
 
 void Skybox::draw_skybox(glm::mat4 view_matrix, glm::mat4 projection_matrix)
 {
+
+	view_matrix = glm::mat4(glm::mat3(view_matrix));
+
+	glDepthMask(GL_FALSE);
+
+	sky_shader->use_shader();
+	glUniformMatrix4fv(uniform_projection, 1, GL_FALSE, glm::value_ptr(projection_matrix));
+	glUniformMatrix4fv(uniform_view, 1, GL_FALSE, glm::value_ptr(view_matrix));
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, texture_id);
+
+	sky_shader->validate();
+
+	sky_mesh->render_mesh();
+
+	glDepthMask(GL_TRUE);
+
 }
 
 Skybox::~Skybox()

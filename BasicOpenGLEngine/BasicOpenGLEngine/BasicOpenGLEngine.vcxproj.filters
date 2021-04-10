@@ -133,5 +133,11 @@
     <None Include="Shaders\omni_shadow_map.vert">
       <Filter>Shader</Filter>
     </None>
+    <None Include="Shaders\skybox.frag">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="Shaders\skybox.vert">
+      <Filter>Shader</Filter>
+    </None>
   </ItemGroup>
 </Project>

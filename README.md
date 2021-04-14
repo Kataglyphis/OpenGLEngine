@@ -12,7 +12,7 @@
   <a href="https://jotrocken.blog/">
       <img src="https://img.shields.io/badge/SayThanks.io-%E2%98%BC-1EAEDB.svg">
   </a>
-  <a href="https://www.paypal.me/">
+  <a href="https://paypal.me/JonasHeinle?locale.x=de_DE">
     <img src="https://img.shields.io/badge/$-donate-ff69b4.svg?maxAge=2592000&amp;style=flat">
   </a>
 </p>
@@ -77,10 +77,9 @@ With this project you get access to a tool enabling you to build such.
 ### Built With
 
 This section should list any major frameworks that you built your project using. Leave any add-ons/plugins for the acknowledgements section. Here are a few examples.
-* [Bootstrap](https://getbootstrap.com)
-* [JQuery](https://jquery.com)
-* [Laravel](https://laravel.com)
-
+* [OpenGL 4.6](https://www.opengl.org//)
+* [GLM](https://github.com/g-truc/glm)
+* [GLFW](https://www.glfw.org/)
 
 
 <!-- GETTING STARTED -->

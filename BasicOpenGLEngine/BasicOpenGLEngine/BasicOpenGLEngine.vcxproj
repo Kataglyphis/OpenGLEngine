@@ -93,7 +93,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)/../ExternalLibs/GLEW/glew-2.1.0/lib/Release/x64;$(SolutionDir)/../ExternalLibs/ASSIMP/lib/;$(SolutionDir)/../ExternalLibs/GLFW/lib-vc2019;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)/../ExternalLibs/GLEW/glew-2.1.0/lib/Release/x64__;$(SolutionDir)/../ExternalLibs/ASSIMP/lib/;$(SolutionDir)/../ExternalLibs/GLFW/lib-vc2019;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>opengl32.lib;glew32.lib;glfw3.lib;assimp-vc142-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -112,7 +112,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)/../ExternalLibs/GLEW/glew-2.1.0/lib/Release/x64;$(SolutionDir)/../ExternalLibs/ASSIMP/lib/;$(SolutionDir)/../ExternalLibs/GLFW/lib-vc2019;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)/../ExternalLibs/GLEW/glew-2.1.0/lib/Release/x64__;$(SolutionDir)/../ExternalLibs/ASSIMP/lib/;$(SolutionDir)/../ExternalLibs/GLFW/lib-vc2019;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>opengl32.lib;glew32.lib;glfw3.lib;assimp-vc142-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -127,7 +127,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)/../ExternalLibs/GLEW/glew-2.1.0/lib/Release/x64;$(SolutionDir)/../ExternalLibs/ASSIMP/lib/;$(SolutionDir)/../ExternalLibs/GLFW/lib-vc2019;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)/../ExternalLibs/GLEW/glew-2.1.0/lib/Release/x64__;$(SolutionDir)/../ExternalLibs/ASSIMP/lib/;$(SolutionDir)/../ExternalLibs/GLFW/lib-vc2019;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>opengl32.lib;glew32.lib;glfw3.lib;assimp-vc142-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -146,7 +146,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)/../ExternalLibs/GLEW/glew-2.1.0/lib/Release/x64;$(SolutionDir)/../ExternalLibs/ASSIMP/lib/;$(SolutionDir)/../ExternalLibs/GLFW/lib-vc2019;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)/../ExternalLibs/GLEW/glew-2.1.0/lib/Release/x64__;$(SolutionDir)/../ExternalLibs/ASSIMP/lib/;$(SolutionDir)/../ExternalLibs/GLFW/lib-vc2019;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>opengl32.lib;glew32.lib;glfw3.lib;assimp-vc142-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>

@@ -9,9 +9,6 @@
 <h4 align="center">A graphics engine built on top of OpenGL <a href="https://jotrocken.blog/" target="_blank"></a>.</h4>
 
 <p align="center">
-  <a href="https://jotrocken.blog/">
-      <img src="https://img.shields.io/badge/SayThanks.io-%E2%98%BC-1EAEDB.svg">
-  </a>
   <a href="https://paypal.me/JonasHeinle?locale.x=de_DE">
     <img src="https://img.shields.io/badge/$-donate-ff69b4.svg?maxAge=2592000&amp;style=flat">
   </a>

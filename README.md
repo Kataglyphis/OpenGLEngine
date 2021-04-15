@@ -58,7 +58,7 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-<!-- [![Product Name Screen Shot][product-screenshot]](https://example.com) -->
+[![Product Name Screen Shot][product-screenshot]](https://jotrocken.blog/)
 
 There is a high demand in high-performance real-time graphic applications.
 With this project you get access to a tool enabling you to build such.
@@ -102,7 +102,7 @@ Right now everything is included. So after cloning you are ready to go :))
 <!-- USAGE EXAMPLES -->
 ## Usage
 
-_For more examples, please refer to the [Documentation](https://example.com)_
+_For more examples, please refer to the [Documentation](https://jotrocken.blog/)_
 
 
 

@@ -58,7 +58,7 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-[![Product Name Screen Shot][product-screenshot]](https://jotrocken.blog/)
+[![Kataglyphis Engine][product-screenshot]](https://jotrocken.blog/)
 
 There is a high demand in high-performance real-time graphic applications.
 With this project you get access to a tool enabling you to build such.
@@ -108,7 +108,7 @@ _For more examples, please refer to the [Documentation](https://jotrocken.blog/)
 
 <!-- ROADMAP -->
 ## Roadmap
-
+Upcoming :)
 <!-- See the [open issues](https://github.com/othneildrew/Best-README-Template/issues) for a list of proposed features (and known issues). -->
 
 
@@ -163,7 +163,7 @@ Project Link: [https://github.com/Kataglyphis/OpenGLEngine](https://github.com/K
 [license-url]: https://github.com/othneildrew/Best-README-Template/blob/master/LICENSE.txt
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [linkedin-url]: https://www.linkedin.com/in/jonas-heinle-0b2a301a0/
-[product-screenshot]: images/screenshot.png
+[product-screenshot]: images/Screenshot.png
 
 
 

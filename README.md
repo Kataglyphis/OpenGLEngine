@@ -73,10 +73,10 @@ With this project you get access to a tool enabling you to build such.
 
 ### Built With
 
-This section should list any major frameworks that you built your project using. Leave any add-ons/plugins for the acknowledgements section. Here are a few examples.
 * [OpenGL 4.6](https://www.opengl.org//)
 * [GLM](https://github.com/g-truc/glm)
 * [GLFW](https://www.glfw.org/)
+* [ASSIMP](https://github.com/assimp/assimp)
 
 
 <!-- GETTING STARTED -->
